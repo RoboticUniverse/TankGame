@@ -49,6 +49,11 @@ if __name__ == '__main__':
                 pygame.quit()
                 sys.exit()
 
+        keys = pygame.key.get_pressed()
+        if keys[K_a]:
+            print("lol")
+            DISPLAYSURF.fill("Green")
+
         time = timeClock.tick()
 
         pygame.display.update()
