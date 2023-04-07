@@ -1,6 +1,7 @@
 import math
 import sys
 import pygame
+import random
 from pygame.locals import *
 
 up_kb = [K_w, K_UP]
@@ -14,6 +15,14 @@ BACKGROUND = (100, 100, 100)
 FPS = 60
 cap_frame_rate = False
 show_fps = True
+
+
+def davidMethod():
+    i = random.randint(1, 10)
+    ans = ''
+    for j in range(i):
+        ans += 'david '
+    return ans
 
 
 if __name__ == '__main__':
@@ -50,10 +59,13 @@ if __name__ == '__main__':
                 sys.exit()
 
         keys = pygame.key.get_pressed()
+
+
         if keys[K_a]:
             print("lol")
             DISPLAYSURF.fill("Green")
             DISPLAYSURF.fill("Red")
+            print(davidMethod())
 
         time = timeClock.tick()
 
