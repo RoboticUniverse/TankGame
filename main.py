@@ -53,6 +53,7 @@ if __name__ == '__main__':
         if keys[K_a]:
             print("lol")
             DISPLAYSURF.fill("Green")
+            DISPLAYSURF.fill("Red")
 
         time = timeClock.tick()
 
