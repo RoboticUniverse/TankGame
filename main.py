@@ -26,12 +26,7 @@ def davidMethod():
 
 
 def landon(x):
-    if x == 1:
-        return "1 is odd"
-    elif x == 2:
-        return "2 is odd"
-    else:
-        return str(x) + " is even"
+    return "landon has " + str(x) + " friends."
 
 
 if __name__ == '__main__':
@@ -53,10 +48,7 @@ if __name__ == '__main__':
     fps_update = 500
     curr_fps = 0
 
-    print(landon(1))
-    print(landon(2))
-    print(landon(3))
-    print(landon(4))
+    print(landon(0))
 
     while True:
         DISPLAYSURF.fill(BACKGROUND)
