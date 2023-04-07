@@ -25,6 +25,15 @@ def davidMethod():
     return ans
 
 
+def landon(x):
+    if x == 1:
+        return "1 is odd"
+    elif x == 2:
+        return "2 is odd"
+    else:
+        return str(x) + " is even"
+
+
 if __name__ == '__main__':
     pygame.init()
     timeClock = pygame.time.Clock()
@@ -44,6 +53,11 @@ if __name__ == '__main__':
     fps_update = 500
     curr_fps = 0
 
+    print(landon(1))
+    print(landon(2))
+    print(landon(3))
+    print(landon(4))
+
     while True:
         DISPLAYSURF.fill(BACKGROUND)
         if show_fps:
@@ -59,7 +73,6 @@ if __name__ == '__main__':
                 sys.exit()
 
         keys = pygame.key.get_pressed()
-
 
         if keys[K_a]:
             print("lol")
