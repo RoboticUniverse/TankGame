@@ -3,6 +3,8 @@ import sys
 import pygame
 import random
 from pygame.locals import *
+from level import *
+from player import *
 
 up_kb = [K_w, K_UP]
 down_kb = [K_s, K_DOWN]
