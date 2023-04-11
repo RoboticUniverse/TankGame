@@ -20,16 +20,6 @@ cap_frame_rate = False
 show_fps = True
 
 
-def davidMethod():
-    i = random.randint(1, 10)
-    ans = ''
-    for j in range(i):
-        ans += 'david '
-    return ans
-
-
-def landon(x):
-    return "landon has " + str(x) + " friends."
 
 
 if __name__ == '__main__':
@@ -68,11 +58,7 @@ if __name__ == '__main__':
 
         keys = pygame.key.get_pressed()
         level.run()
-        if keys[K_a]:
-            print("lol")
-            DISPLAYSURF.fill("Green")
-            DISPLAYSURF.fill("Red")
-            print(davidMethod())
+
 
         time = timeClock.tick()
 
