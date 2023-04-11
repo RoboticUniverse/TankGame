@@ -39,8 +39,6 @@ if __name__ == '__main__':
     fps_update = 500
     curr_fps = 0
 
-    print(landon(0))
-    print(landon(54))
 
     while True:
         DISPLAYSURF.fill(BACKGROUND)
