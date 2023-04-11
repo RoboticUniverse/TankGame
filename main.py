@@ -11,7 +11,8 @@ down_kb = [K_s, K_DOWN]
 left_kb = [K_a, K_LEFT]
 right_kb = [K_d, K_RIGHT]
 
-ratio = [16, 9]
+width = 1480
+height = 1000
 
 BACKGROUND = (100, 100, 100)
 FPS = 60
@@ -35,15 +36,13 @@ if __name__ == '__main__':
     pygame.init()
     timeClock = pygame.time.Clock()
     fpsClock = pygame.time.Clock()
-    info = pygame.display.Info()
-    width = info.current_w
-    height = info.current_h
-    for i in range(10):
-        width -= ratio[0]
-        height -= ratio[1]
     DISPLAYSURF = pygame.display.set_mode((width, height))
     pygame.display.set_caption('tank game')
     font = pygame.font.Font("freesansbold.ttf", 30)
+
+    #temporary
+    level = Level(DISPLAYSURF, 1)
+
 
     time = 0
     fps_time = 0
@@ -68,7 +67,7 @@ if __name__ == '__main__':
                 sys.exit()
 
         keys = pygame.key.get_pressed()
-
+        level.run()
         if keys[K_a]:
             print("lol")
             DISPLAYSURF.fill("Green")
