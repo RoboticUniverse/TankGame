@@ -50,7 +50,6 @@ if __name__ == '__main__':
                 pygame.quit()
                 sys.exit()
 
-        keys = pygame.key.get_pressed()
         level.run()
 
         time = timeClock.tick()

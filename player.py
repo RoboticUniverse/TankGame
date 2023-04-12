@@ -13,7 +13,7 @@ class Player(pygame.sprite.Sprite):
         self.color = color
         self.speed = 1
 
-        self.image = pygame.image.load("Tank 2.png")
+        self.image = pygame.image.load("sprites/Tank 2.png")
         self.rect = self.image.get_rect(topleft=pos)
 
     def getPos(self):
@@ -39,6 +39,3 @@ class Player(pygame.sprite.Sprite):
         return [self.velocity[0], self.velocity[1]]
     def setAccY(self, y):
         self.velocity[1] = y
-
-    def drawPlayer(self, DISPLAYSURF):
-        DISPLAYSURF.blit(self.rect)

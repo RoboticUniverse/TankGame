@@ -1,5 +1,6 @@
 import pygame
 from wall import Wall
+from player import *
 
 
 class Level:
@@ -8,6 +9,8 @@ class Level:
         self.number = number
         self.walls = pygame.sprite.Group()
         self.create_outline()
+        self.player = pygame.sprite.GroupSingle()
+        self.player.add(Player((2, 2), 2, 2, (255, 0, 0)))
 
     def create_outline(self):
         try:
@@ -34,4 +37,5 @@ class Level:
 
     def run(self):
         self.walls.draw(self.surface)
+        self.player.draw(self.surface)
 
