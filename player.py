@@ -27,6 +27,7 @@ class Player(pygame.sprite.Sprite):
         self.y += movement_y
 
     def rotatePlayer(self):
+        pass
         # add rotate function
     def setVelocity(self, x, y):
         self.velocity = [x, y]
