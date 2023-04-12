@@ -20,8 +20,6 @@ cap_frame_rate = True
 show_fps = True
 
 
-
-
 if __name__ == '__main__':
     pygame.init()
     timeClock = pygame.time.Clock()
@@ -30,15 +28,13 @@ if __name__ == '__main__':
     pygame.display.set_caption('tank game')
     font = pygame.font.Font("freesansbold.ttf", 30)
 
-    #temporary
+    # temporary
     level = Level(DISPLAYSURF, 1)
-
 
     time = 0
     fps_time = 0
     fps_update = 500
     curr_fps = 0
-
 
     while True:
         DISPLAYSURF.fill(BACKGROUND)
@@ -56,7 +52,6 @@ if __name__ == '__main__':
 
         keys = pygame.key.get_pressed()
         level.run()
-
 
         time = timeClock.tick()
 

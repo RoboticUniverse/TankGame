@@ -2,14 +2,12 @@ import pygame
 from wall import Wall
 
 
-
 class Level:
     def __init__(self, display_surface, number=1):
         self.surface = display_surface
         self.number = number
         self.walls = pygame.sprite.Group()
         self.create_outline()
-
 
     def create_outline(self):
         try:
@@ -22,36 +20,17 @@ class Level:
                         self.walls.add(Wall((w * 40 + 20, h * 40 + 20), 40, True))
                     # elif room.get_at((w, h)) == (0, 255, 0, 255):
                     #     enemies.append((w, h))
-
         except FileNotFoundError:
             print("Requested Room " + str(self.number) + " Does Not Exist")
-    def get_x(self):
-        return self.x
 
-    def get_y(self):
-        return self.y
-
-    def get_width(self):
-        return self.width
-
-    def get_height(self):
-        return self.height
-
-    def get_outline(self):
-        return self.outline
+    def get_walls(self):
+        return self.walls
 
     def get_number(self):
         return self.number
 
-    def scale_outline(self, scale, offset_x, offset_y):
-        for o in self.outline:
-            o.x = o.x * scale + offset_x
-            o.y = o.y * scale + offset_y
-            o.width *= scale
-            o.height *= scale
-
-    def __str__(self):
-        return "X: " + str(self.x) + ", Y: " + str(self.y)
+    # def __str__(self):
+    #     return "X: " + str(self.x) + ", Y: " + str(self.y)
 
     def run(self):
         self.walls.draw(self.surface)

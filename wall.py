@@ -2,7 +2,7 @@ import pygame
 
 
 class Wall(pygame.sprite.Sprite):
-    def __init__(self, pos, size, is_breakable):
+    def __init__(self, pos, size=40, is_breakable=False):
         super().__init__()
         self.image = pygame.Surface((size, size))
         self.image.fill('Blue')
