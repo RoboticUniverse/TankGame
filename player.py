@@ -4,11 +4,9 @@ from pygame.locals import *
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, pos, x, y, color):
+    def __init__(self, pos, color):
         super().__init__()
 
-        self.x = x
-        self.y = y
         self.angle = 0
         self.color = color
         self.speed = 1
@@ -16,15 +14,13 @@ class Player(pygame.sprite.Sprite):
         self.image = pygame.image.load("sprites/Tank 2.png")
         self.rect = self.image.get_rect(topleft=pos)
 
-    def getPos(self):
-        return [self.x, self.y]
     def getAngle(self):
         return self.angle
     def movePlayer(self):
         movement_x = math.cos(self.angle) * self.speed
         movement_y = math.sin(self.angle) * self.speed
-        self.x += movement_x
-        self.y += movement_y
+        self.rect.x += movement_x
+        self.rect.y += movement_y
 
     def rotatePlayer(self):
         pass
@@ -39,3 +35,11 @@ class Player(pygame.sprite.Sprite):
         return [self.velocity[0], self.velocity[1]]
     def setAccY(self, y):
         self.velocity[1] = y
+
+    def getImputs(self):
+        keys = pygame.key.get_pressed()
+
+
+
+    def update(self, DISPLAYSURF):
+        self.getImputs()
