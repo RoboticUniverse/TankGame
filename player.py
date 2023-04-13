@@ -19,20 +19,20 @@ class Player(pygame.sprite.Sprite):
         self.image = pygame.image.load("sprites/Tank 2.png")
         self.rect = self.image.get_rect(topleft=pos)
 
-    def get_angle(self):
+    def getAngle(self):
         return self.angle
 
-    def move_player(self):
+    def movePlayer(self):
         movement_x = math.cos(self.angle) * self.speed
         movement_y = math.sin(self.angle) * self.speed
         self.rect.x += movement_x
         self.rect.y += movement_y
 
-    def rotate_player(self):
+    def rotatePlayer(self):
         pass
         # add rotate function
 
-    def set_velocity(self, x, y):
+    def setVelocity(self, x, y):
         self.velocity = [x, y]
 
     def setSpeedX(self, x):
