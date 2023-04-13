@@ -21,6 +21,10 @@ class Player(pygame.sprite.Sprite):
 
         self.image = pygame.image.load("sprites/Tank 2.png")
         self.rect = self.image.get_rect(topleft=pos)
+        self.x = (pos[0])
+        self.y = (pos[1])
+
+        self.picture = pygame.image.load("sprites/Tank 2.png")
 
     def getAngle(self):
         return self.angle
@@ -52,8 +56,17 @@ class Player(pygame.sprite.Sprite):
 
     def get_inputs(self):
         keys = pygame.key.get_pressed()
-        if keys[K_a]:
-            self.image = pygame.transform.rotate(self.image, 1)
+        if keys[key_sets["kb1"]["left"]]:
+            self.angle += 1
+            picture_copy = pygame.transform.rotate(self.picture, self.angle).copy()
+            self.image = pygame.transform.rotate(self.picture, self.angle)
+            # self.rect.x = self.x - int(picture_copy.get_width() / 2)
+            # self.rect.y = self.y - int(picture_copy.get_height() / 2)
+            self.rect.x = 0
+            self.rect.y = 0
+        if keys[K_d]:
+            self.angle -= 1
+            self.image = pygame.transform.rotate(self.picture, self.angle)
 
     def update(self):
         self.get_inputs()
