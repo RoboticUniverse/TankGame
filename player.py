@@ -8,7 +8,10 @@ left_kb = [K_a, K_LEFT]
 right_kb = [K_d, K_RIGHT]
 
 key_sets = [{'up': K_w, 'down': K_s, 'left': K_a, 'right': K_a, 'shoot': K_LSHIFT, 'ability': K_LCTRL},
-            {'up': K_UP, 'down': K_DOWN, 'left': K_LEFT, 'right': K_RIGHT, 'shoot': K_RCTRL, 'ability': K_MENU}]
+            {'up': K_p, 'down': K_SEMICOLON, 'left': K_l, 'right': K_QUOTEDBL, 'shoot': K_COMMA, 'ability': K_m},
+            {'up': K_t, 'down': K_g, 'left': K_f, 'right': K_h, 'shoot': K_c, 'ability': K_x},
+            {'up': K_UP, 'down': K_DOWN, 'left': K_LEFT, 'right': K_RIGHT, 'shoot': K_RCTRL, 'ability': K_MENU},
+            ]
 
 
 class Player(pygame.sprite.Sprite):
