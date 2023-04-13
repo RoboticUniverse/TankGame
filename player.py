@@ -59,14 +59,14 @@ class Player(pygame.sprite.Sprite):
 
     def get_inputs(self):
         keys = pygame.key.get_pressed()
-        if keys[key_sets["kb1"]["left"]]:
+        if keys[key_sets[self.player_number]["left"]]:
             self.angle += 1
             picture_copy = pygame.transform.rotate(self.picture, self.angle).copy()
             self.image = pygame.transform.rotate(self.picture, self.angle)
             # self.rect.x = self.x - int(picture_copy.get_width() / 2)
             # self.rect.y = self.y - int(picture_copy.get_height() / 2)
-            self.rect.x = 0
-            self.rect.y = 0
+            # self.rect.x = 0
+            # self.rect.y = 0
         if keys[K_d]:
             self.angle -= 1
             self.image = pygame.transform.rotate(self.picture, self.angle)
