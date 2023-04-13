@@ -7,16 +7,19 @@ down_kb = [K_s, K_DOWN]
 left_kb = [K_a, K_LEFT]
 right_kb = [K_d, K_RIGHT]
 
-key_sets = {"kb1": {'up': K_w, 'down': K_s, 'left': K_a, 'right': K_a, 'shoot': K_LSHIFT, 'ability': K_LCTRL},
-            "kb2": {'up': K_UP, 'down': K_DOWN, 'left': K_LEFT, 'right': K_RIGHT, 'shoot': K_RCTRL, 'ability': K_MENU}}
+key_sets = [{'up': K_w, 'down': K_s, 'left': K_a, 'right': K_a, 'shoot': K_LSHIFT, 'ability': K_LCTRL},
+            {'up': K_p, 'down': K_SEMICOLON, 'left': K_l, 'right': K_QUOTEDBL, 'shoot': K_COMMA, 'ability': K_m},
+            {'up': K_t, 'down': K_g, 'left': K_f, 'right': K_h, 'shoot': K_c, 'ability': K_x},
+            {'up': K_UP, 'down': K_DOWN, 'left': K_LEFT, 'right': K_RIGHT, 'shoot': K_RCTRL, 'ability': K_MENU},
+            ]
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, pos, color):
+    def __init__(self, pos, player_number):
         super().__init__()
 
+        self.player_number = player_number
         self.angle = 0
-        self.color = color
         self.speed = 1
 
         self.image = pygame.image.load("sprites/Tank 2.png")
