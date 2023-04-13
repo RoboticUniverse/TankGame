@@ -9,8 +9,8 @@ class Level:
         self.number = number
         self.walls = pygame.sprite.Group()
         self.create_outline()
-        self.player = pygame.sprite.GroupSingle()
-        self.player.add(Player((2, 2), 2, 2, (255, 0, 0)))
+        self.players = pygame.sprite.Group()
+        self.players.add(Player((2, 2), (255, 0, 0)))
 
     def create_outline(self):
         try:
@@ -37,5 +37,6 @@ class Level:
 
     def run(self):
         self.walls.draw(self.surface)
-        self.player.draw(self.surface)
+        self.players.update()
+        self.players.draw(self.surface)
 
