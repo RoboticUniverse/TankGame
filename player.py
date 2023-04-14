@@ -7,8 +7,8 @@ down_kb = [K_s, K_DOWN]
 left_kb = [K_a, K_LEFT]
 right_kb = [K_d, K_RIGHT]
 
-key_sets = [{'up': K_w, 'down': K_s, 'left': K_a, 'right': K_a, 'shoot': K_LSHIFT, 'ability': K_LCTRL},
-            {'up': K_p, 'down': K_SEMICOLON, 'left': K_l, 'right': K_QUOTEDBL, 'shoot': K_COMMA, 'ability': K_m},
+key_sets = [{'up': K_w, 'down': K_s, 'left': K_a, 'right': K_d, 'shoot': K_LSHIFT, 'ability': K_LCTRL},
+            {'up': K_p, 'down': K_SEMICOLON, 'left': K_l, 'right': K_QUOTE, 'shoot': K_COMMA, 'ability': K_m},
             {'up': K_t, 'down': K_g, 'left': K_f, 'right': K_h, 'shoot': K_c, 'ability': K_x},
             {'up': K_UP, 'down': K_DOWN, 'left': K_LEFT, 'right': K_RIGHT, 'shoot': K_RCTRL, 'ability': K_MENU},
             ]
@@ -22,12 +22,12 @@ class Player(pygame.sprite.Sprite):
         self.angle = 0
         self.speed = 1
 
-        self.image = pygame.image.load("sprites/Tank 2.png")
-        self.rect = self.image.get_rect(topleft=pos)
+        self.image = pygame.image.load("sprites/TankGreen.png")
+        self.rect = self.image.get_rect(center=pos)
         self.x = (pos[0])
         self.y = (pos[1])
 
-        self.picture = pygame.image.load("sprites/Tank 2.png")
+        self.picture = pygame.image.load("sprites/TankGreen.png")
 
     def getAngle(self):
         return self.angle
@@ -63,13 +63,14 @@ class Player(pygame.sprite.Sprite):
             self.angle += 1
             picture_copy = pygame.transform.rotate(self.picture, self.angle).copy()
             self.image = pygame.transform.rotate(self.picture, self.angle)
-            # self.rect.x = self.x - int(picture_copy.get_width() / 2)
-            # self.rect.y = self.y - int(picture_copy.get_height() / 2)
-            # self.rect.x = 0
-            # self.rect.y = 0
-        if keys[K_d]:
+            self.rect.x = self.x - int(picture_copy.get_width() / 2)
+            self.rect.y = self.y - int(picture_copy.get_height() / 2)
+        if keys[key_sets[self.player_number]["right"]]:
             self.angle -= 1
+            picture_copy = pygame.transform.rotate(self.picture, self.angle).copy()
             self.image = pygame.transform.rotate(self.picture, self.angle)
+            self.rect.x = self.x - int(picture_copy.get_width() / 2)
+            self.rect.y = self.y - int(picture_copy.get_height() / 2)
 
     def update(self):
         self.get_inputs()
