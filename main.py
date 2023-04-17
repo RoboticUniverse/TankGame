@@ -11,7 +11,7 @@ height = 1000
 
 BACKGROUND = (100, 100, 100)
 FPS = 60
-cap_frame_rate = True
+cap_frame_rate = False
 show_fps = True
 
 
@@ -72,13 +72,6 @@ if __name__ == '__main__':
 
     while True:
         DISPLAYSURF.fill(BACKGROUND)
-        if show_fps:
-            fps_time += time
-            if fps_time >= fps_update:
-                curr_fps = fpsClock.get_fps()
-                fps_time = fps_time % fps_update
-            fps_text = font.render("FPS: " + str(math.floor(curr_fps)), False, (255, 255, 255))
-            DISPLAYSURF.blit(fps_text, (5, 5))
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
@@ -88,6 +81,14 @@ if __name__ == '__main__':
         # pygame.draw.circle(DISPLAYSURF, (255, 0, 0), (100, 100), 2.5)
 
         time = timeClock.tick()
+
+        if show_fps:
+            fps_time += time
+            if fps_time >= fps_update:
+                curr_fps = fpsClock.get_fps()
+                fps_time = fps_time % fps_update
+            fps_text = font.render("FPS: " + str(math.floor(curr_fps)), False, (255, 255, 255))
+            DISPLAYSURF.blit(fps_text, (5, 5))
 
         pygame.display.update()
         if cap_frame_rate:

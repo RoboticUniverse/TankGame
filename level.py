@@ -19,7 +19,7 @@ class Level:
                 for w in range(room.get_width()):
                     if room.get_at((w, h)) == (0, 0, 0, 255):
                         self.walls.add(Wall((w * 40 + 20, h * 40 + 20), 40, False))
-                    elif room.get_at((w, h)) == (255, 0, 0, 255):
+                    elif room.get_at((w, h)) == (255, 255, 0, 255):
                         self.walls.add(Wall((w * 40 + 20, h * 40 + 20), 40, True))
                     elif room.get_at((w, h)) == (0, 0, 255, 255):
                         self.players.add(Player((w * 40 + 20 + 16, h * 40 + 20 + 16), player_number))
@@ -27,7 +27,7 @@ class Level:
                     # elif room.get_at((w, h)) == (0, 255, 0, 255):
                     #     enemies.append((w, h))
         except FileNotFoundError:
-            print("Requested Room " + str(self.number) + " Does Not Exist")
+            print("Requested Level " + str(self.number) + " Does Not Exist")
 
     def get_walls(self):
         return self.walls
