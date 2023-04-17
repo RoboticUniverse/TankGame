@@ -16,6 +16,7 @@ show_fps = True
 skip_menu = True
 
 in_level = False
+menu_buttons = []
 
 
 class Button:
@@ -57,6 +58,11 @@ class Button:
         return self.pr
 
 
+def display_menu():
+    for button in menu_buttons:
+        button.draw(DISPLAYSURF)
+
+
 if __name__ == '__main__':
     pygame.init()
     timeClock = pygame.time.Clock()
@@ -66,6 +72,8 @@ if __name__ == '__main__':
     font = pygame.font.Font("freesansbold.ttf", 30)
 
     level = Level(DISPLAYSURF, 1)
+    menu_buttons.append(Button(Rect(DISPLAYSURF.get_width() / 2 - 200, DISPLAYSURF.get_height() / 4 - 50, 400, 100), "FUN TANK GAME", (100, 100, 100), (0, 255, 0)))
+    menu_buttons.append(Button(Rect(DISPLAYSURF.get_width() / 2 - 50, DISPLAYSURF.get_height() / 2 - 25, 100, 50), "Play", (0, 0, 0), (255, 255, 255)))
     if skip_menu:
         in_level = True
 
@@ -88,6 +96,8 @@ if __name__ == '__main__':
 
         if in_level:
             level.run(time)
+        else:
+            display_menu()
         # pygame.draw.circle(DISPLAYSURF, (255, 0, 0), (100, 100), 2.5)
 
         if show_fps:
