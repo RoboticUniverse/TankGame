@@ -67,7 +67,7 @@ class Player(pygame.sprite.Sprite):
             self.rect.x = self.x - int(picture_copy.get_width() / 2)
             self.rect.y = self.y - int(picture_copy.get_height() / 2)
         if keys[key_sets[self.player_number]["right"]]:
-            self.angle += self.turn_speed
+            self.angle -= self.turn_speed
             picture_copy = pygame.transform.rotate(self.picture, self.angle).copy()
             self.image = pygame.transform.rotate(self.picture, self.angle)
             self.rect.x = self.x - int(picture_copy.get_width() / 2)

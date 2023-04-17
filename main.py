@@ -85,7 +85,7 @@ if __name__ == '__main__':
                 sys.exit()
 
         level.run()
-        pygame.draw.circle(DISPLAYSURF, (255, 0, 0), (100, 100), 2.5)
+        # pygame.draw.circle(DISPLAYSURF, (255, 0, 0), (100, 100), 2.5)
 
         time = timeClock.tick()
 
