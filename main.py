@@ -13,6 +13,7 @@ BACKGROUND = (100, 100, 100)
 FPS = 60
 cap_frame_rate = False
 show_fps = True
+skip_menu = True
 
 in_level = False
 
@@ -65,6 +66,8 @@ if __name__ == '__main__':
     font = pygame.font.Font("freesansbold.ttf", 30)
 
     level = Level(DISPLAYSURF, 1)
+    if skip_menu:
+        in_level = True
 
     time = 0
     fps_time = 0
