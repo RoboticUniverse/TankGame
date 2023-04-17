@@ -21,7 +21,7 @@ class Player(pygame.sprite.Sprite):
         self.player_number = player_number
         self.angle = 0
         self.speed = 1
-        self.turn_speed = 2
+        self.turn_speed = .2
 
         self.image = pygame.image.load("sprites/TankGreen.png")
         self.rect = self.image.get_rect(center=pos)
@@ -58,20 +58,20 @@ class Player(pygame.sprite.Sprite):
     def setAccY(self, y):
         self.velocity[1] = y
 
-    def get_inputs(self):
+    def get_inputs(self, time_passed):
         keys = pygame.key.get_pressed()
         if keys[key_sets[self.player_number]["left"]]:
-            self.angle += self.turn_speed
+            self.angle += self.turn_speed * time_passed
             picture_copy = pygame.transform.rotate(self.picture, self.angle).copy()
             self.image = pygame.transform.rotate(self.picture, self.angle)
             self.rect.x = self.x - int(picture_copy.get_width() / 2)
             self.rect.y = self.y - int(picture_copy.get_height() / 2)
         if keys[key_sets[self.player_number]["right"]]:
-            self.angle -= self.turn_speed
+            self.angle -= self.turn_speed * time_passed
             picture_copy = pygame.transform.rotate(self.picture, self.angle).copy()
             self.image = pygame.transform.rotate(self.picture, self.angle)
             self.rect.x = self.x - int(picture_copy.get_width() / 2)
             self.rect.y = self.y - int(picture_copy.get_height() / 2)
 
-    def update(self):
-        self.get_inputs()
+    def update(self, time_passed):
+        self.get_inputs(time_passed)

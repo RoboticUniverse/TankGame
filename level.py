@@ -38,8 +38,8 @@ class Level:
     # def __str__(self):
     #     return "X: " + str(self.x) + ", Y: " + str(self.y)
 
-    def run(self):
+    def run(self, time_passed):
         self.walls.draw(self.surface)
-        self.players.update()
+        self.players.update(time_passed)
         self.players.draw(self.surface)
 

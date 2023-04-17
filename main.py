@@ -14,6 +14,8 @@ FPS = 60
 cap_frame_rate = False
 show_fps = True
 
+in_level = False
+
 
 class Button:
     def __init__(self, rect, content="Hello World", b_color=(100, 100, 100), t_color=(0, 0, 0)):
@@ -62,7 +64,6 @@ if __name__ == '__main__':
     pygame.display.set_caption('tank game')
     font = pygame.font.Font("freesansbold.ttf", 30)
 
-    # temporary
     level = Level(DISPLAYSURF, 1)
 
     time = 0
@@ -76,11 +77,15 @@ if __name__ == '__main__':
             if event.type == QUIT:
                 pygame.quit()
                 sys.exit()
-
-        level.run()
-        # pygame.draw.circle(DISPLAYSURF, (255, 0, 0), (100, 100), 2.5)
+            if event.type == MOUSEBUTTONDOWN:
+                level = Level(DISPLAYSURF, 1)
+                in_level = True
 
         time = timeClock.tick()
+
+        if in_level:
+            level.run(time)
+        # pygame.draw.circle(DISPLAYSURF, (255, 0, 0), (100, 100), 2.5)
 
         if show_fps:
             fps_time += time
