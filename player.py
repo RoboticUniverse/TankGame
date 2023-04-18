@@ -20,18 +20,19 @@ class Player(pygame.sprite.Sprite):
 
         self.player_number = player_number
         self.angle = 0
-        self.speed = .1
+        self.speed = .2
         self.turn_speed = .2
 
         self.image = pygame.image.load("sprites/TankGreen.png")
         self.rect = self.image.get_rect(center=pos)
-        self.x = (pos[0])
-        self.y = (pos[1])
+        self.x = pos[0]
+        self.y = pos[1]
 
         self.picture = pygame.image.load("sprites/TankGreen.png")
 
     def getAngle(self):
         return self.angle
+
     def movePlayerCombined(self, direction):
         if direction == self.angle:
             movement_x = math.cos(self.angle) * self.speed
@@ -46,13 +47,14 @@ class Player(pygame.sprite.Sprite):
                 self.rotatePlayer(1)
             elif endAngle < startAngle:
                 self.rotatePlayer(-1)
+
     def movePlayer(self, time_passed):
-        movement_x = math.cos(self.angle * math.pi / 180) * self.speed
-        movement_y = math.sin(self.angle * math.pi / 180) * self.speed
-        self.rect.x += movement_x * time_passed
-        self.rect.y += movement_y * time_passed
-        self.x += movement_x * time_passed
-        self.y += movement_y * time_passed
+        movement_x = math.cos(self.angle * math.pi / 180) * self.speed * time_passed
+        movement_y = math.sin(self.angle * math.pi / 180) * -1 * self.speed * time_passed
+        self.x += movement_x
+        self.y += movement_y
+        self.rect.x = self.x - int(self.image.get_width() / 2)
+        self.rect.y = self.y - int(self.image.get_height() / 2)
 
     def rotatePlayer(self):
         pass
@@ -77,20 +79,17 @@ class Player(pygame.sprite.Sprite):
         keys = pygame.key.get_pressed()
         if keys[key_sets[self.player_number]["left"]]:
             self.angle += self.turn_speed * time_passed
-            picture_copy = pygame.transform.rotate(self.picture, self.angle).copy()
             self.image = pygame.transform.rotate(self.picture, self.angle)
-            self.rect.x = self.x - int(picture_copy.get_width() / 2)
-            self.rect.y = self.y - int(picture_copy.get_height() / 2)
+            self.rect.x = self.x - int(self.image.get_width() / 2)
+            self.rect.y = self.y - int(self.image.get_height() / 2)
         elif keys[key_sets[self.player_number]["right"]]:
             self.angle -= self.turn_speed * time_passed
-            picture_copy = pygame.transform.rotate(self.picture, self.angle).copy()
             self.image = pygame.transform.rotate(self.picture, self.angle)
-            self.rect.x = self.x - int(picture_copy.get_width() / 2)
-            self.rect.y = self.y - int(picture_copy.get_height() / 2)
+            self.rect.x = self.x - int(self.image.get_width() / 2)
+            self.rect.y = self.y - int(self.image.get_height() / 2)
         elif keys[key_sets[self.player_number]["up"]]:
             self.movePlayer(time_passed)
             print('move player')
-
 
     def update(self, time_passed):
         self.get_inputs(time_passed)

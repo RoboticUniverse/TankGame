@@ -13,7 +13,7 @@ BACKGROUND = (100, 100, 100)
 FPS = 120
 cap_frame_rate = False
 show_fps = True
-skip_menu = True
+skip_menu = False
 
 in_level = False
 menu_buttons = []
