@@ -7,6 +7,8 @@ down_kb = [K_s, K_DOWN]
 left_kb = [K_a, K_LEFT]
 right_kb = [K_d, K_RIGHT]
 
+
+
 key_sets = [{'up': K_w, 'down': K_s, 'left': K_a, 'right': K_d, 'shoot': K_LSHIFT, 'ability': K_LCTRL},
             {'up': K_p, 'down': K_SEMICOLON, 'left': K_l, 'right': K_QUOTE, 'shoot': K_COMMA, 'ability': K_m},
             {'up': K_t, 'down': K_g, 'left': K_f, 'right': K_h, 'shoot': K_c, 'ability': K_x},
@@ -22,6 +24,9 @@ class Player(pygame.sprite.Sprite):
         self.angle = 0
         self.speed = .2
         self.turn_speed = .2
+        self.keyboard = True
+        self.autoaim = True
+        self.autoturn = False
 
         self.image = pygame.image.load("sprites/Tank0.png")
         self.rect = self.image.get_rect(center=pos)
@@ -77,21 +82,24 @@ class Player(pygame.sprite.Sprite):
 
     def get_inputs(self, time_passed):
         keys = pygame.key.get_pressed()
-        if keys[key_sets[self.player_number]["left"]] and not keys[key_sets[self.player_number]["right"]]:
-            self.angle += self.turn_speed * time_passed
-            self.image = pygame.transform.rotate(self.picture, self.angle)
-            self.rect.x = self.x - int(self.image.get_width() / 2)
-            self.rect.y = self.y - int(self.image.get_height() / 2)
-        elif keys[key_sets[self.player_number]["right"]] and not keys[key_sets[self.player_number]["left"]]:
-            self.angle -= self.turn_speed * time_passed
-            self.image = pygame.transform.rotate(self.picture, self.angle)
-            self.rect.x = self.x - int(self.image.get_width() / 2)
-            self.rect.y = self.y - int(self.image.get_height() / 2)
-        elif keys[key_sets[self.player_number]["up"]] and not keys[key_sets[self.player_number]["down"]]:
-            self.movePlayer(time_passed, 1)
-        elif keys[key_sets[self.player_number]["down"]] and not keys[key_sets[self.player_number]["up"]]:
-            self.movePlayer(time_passed, -1)
-            print('move player')
+        if not self.autoturn:
+            if keys[key_sets[self.player_number]["left"]] and not keys[key_sets[self.player_number]["right"]]:
+                self.angle += self.turn_speed * time_passed
+                self.image = pygame.transform.rotate(self.picture, int(self.angle))
+                self.rect.x = self.x - int(self.image.get_width() / 2)
+                self.rect.y = self.y - int(self.image.get_height() / 2)
+            elif keys[key_sets[self.player_number]["right"]] and not keys[key_sets[self.player_number]["left"]]:
+                self.angle -= self.turn_speed * time_passed
+                self.image = pygame.transform.rotate(self.picture, int(self.angle))
+                self.rect.x = self.x - int(self.image.get_width() / 2)
+                self.rect.y = self.y - int(self.image.get_height() / 2)
+            elif keys[key_sets[self.player_number]["up"]] and not keys[key_sets[self.player_number]["down"]]:
+                self.movePlayer(time_passed, 1)
+            elif keys[key_sets[self.player_number]["down"]] and not keys[key_sets[self.player_number]["up"]]:
+                self.movePlayer(time_passed, -1)
+                print('move player')
+        else:
+            print("david do movement")
 
     def update(self, time_passed):
         self.get_inputs(time_passed)
