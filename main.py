@@ -11,7 +11,7 @@ height = 1000
 
 BACKGROUND = (100, 100, 100)
 FPS = 60
-cap_frame_rate = False
+cap_frame_rate = True
 show_fps = True
 skip_menu = True
 
