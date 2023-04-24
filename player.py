@@ -39,29 +39,35 @@ class Player(pygame.sprite.Sprite):
         return self.angle
 
     def movePlayerCombined(self, direction, time_passed):
-        startAngle = abs(self.angle % 360)
-        endAngle = abs(direction % 360)
+        # reset the angle to between 0 and 360
+        self.angle = self.angle % 360
+        if self.angle < 0:
+            self.angle = self.angle - 360
         print(self.angle)
-        if startAngle == abs(endAngle % 360):
+        # target angle is put to between 0 and 360
+        endAngle = abs(direction % 360)
+        # if target matches currrent, move the player
+        if self.angle == abs(endAngle % 360):
             self.movePlayer(time_passed, 1)
+        # rotate the player in the direction of the target
         else:
             if endAngle == 0:
-                if startAngle > 180:
+                if self.angle > 180:
                     self.angle += self.turn_speed * time_passed
-                    if self.angle % 360 > endAngle:
+                    if self.angle % 360 < 180:
                         self.angle = endAngle
                 else:
                     self.angle -= self.turn_speed * time_passed
-                    if self.angle % 360 < endAngle:
-                        self.angle = endAngle
+                    if self.angle % 360 > 180:
+                        self.angle = 0
 
-            elif endAngle - startAngle <= 180 and endAngle - startAngle > 0:
+            elif endAngle - self.angle <= 180 and (endAngle - self.angle > 0 or endAngle - self.angle < -180):
                 self.angle += self.turn_speed * time_passed
-                if self.angle % 360 > endAngle:
+                if self.angle % 360 > endAngle and self.angle - endAngle < 10:
                     self.angle = endAngle
             else:
                 self.angle -= self.turn_speed * time_passed
-                if self.angle % 360 < endAngle:
+                if self.angle % 360 < endAngle and endAngle - self.angle < 10:
                     self.angle = endAngle
             self.image = pygame.transform.rotate(self.picture, int(self.angle))
             self.rect.x = self.x - int(self.image.get_width() / 2)
