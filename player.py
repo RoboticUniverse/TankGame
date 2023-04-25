@@ -47,29 +47,35 @@ class Player(pygame.sprite.Sprite):
         return self.angle
 
     def movePlayerCombined(self, direction, time_passed):
-        startAngle = abs(self.angle % 360)
-        endAngle = abs(direction % 360)
+        # reset the angle to between 0 and 360
+        self.angle = self.angle % 360
+        if self.angle < 0:
+            self.angle = self.angle - 360
         print(self.angle)
-        if startAngle == abs(endAngle % 360):
+        # target angle is put to between 0 and 360
+        endAngle = abs(direction % 360)
+        # if target matches currrent, move the player
+        if self.angle == abs(endAngle % 360):
             self.movePlayer(time_passed, 1)
+        # rotate the player in the direction of the target
         else:
             if endAngle == 0:
-                if startAngle > 180:
+                if self.angle > 180:
                     self.angle += self.turn_speed * time_passed
-                    if self.angle % 360 > endAngle:
+                    if self.angle % 360 < 180:
                         self.angle = endAngle
                 else:
                     self.angle -= self.turn_speed * time_passed
-                    if self.angle % 360 < endAngle:
-                        self.angle = endAngle
+                    if self.angle % 360 > 180:
+                        self.angle = 0
 
-            elif endAngle - startAngle <= 180 and endAngle - startAngle > 0:
+            elif endAngle - self.angle <= 180 and (endAngle - self.angle > 0 or endAngle - self.angle < -180):
                 self.angle += self.turn_speed * time_passed
-                if self.angle % 360 > endAngle:
+                if self.angle % 360 > endAngle and self.angle - endAngle < 10:
                     self.angle = endAngle
             else:
                 self.angle -= self.turn_speed * time_passed
-                if self.angle % 360 < endAngle:
+                if self.angle % 360 < endAngle and endAngle - self.angle < 10:
                     self.angle = endAngle
             self.image = pygame.transform.rotate(self.sprites[self.left_tread][self.right_tread], int(self.angle))
             self.rect.x = self.x - int(self.image.get_width() / 2)
@@ -83,25 +89,6 @@ class Player(pygame.sprite.Sprite):
         self.y += movement_y * direction
         self.rect.x = self.x - int(self.image.get_width() / 2)
         self.rect.y = self.y - int(self.image.get_height() / 2)
-
-    def rotatePlayer(self):
-        pass
-        # add rotate function
-
-    def setVelocity(self, x, y):
-        self.velocity = [x, y]
-
-    def setSpeedX(self, x):
-        self.velocity[0] = x
-
-    def setSpeedY(self, y):
-        self.velocity[1] = y
-
-    def getVelocity(self):
-        return [self.velocity[0], self.velocity[1]]
-
-    def setAccY(self, y):
-        self.velocity[1] = y
 
     def get_inputs(self, time_passed):
         keys = pygame.key.get_pressed()
@@ -123,14 +110,24 @@ class Player(pygame.sprite.Sprite):
                 print('move player')
         else:
             if keys[key_sets[self.player_number]["up"]]:
-
-                self.movePlayerCombined(90, time_passed)
+                if keys[key_sets[self.player_number]["right"]]:
+                    self.movePlayerCombined(45, time_passed)
+                elif keys[key_sets[self.player_number]["left"]]:
+                    self.movePlayerCombined(135, time_passed)
+                else:
+                    self.movePlayerCombined(90, time_passed)
             elif keys[key_sets[self.player_number]["right"]]:
-                self.movePlayerCombined(0, time_passed)
+                if keys[key_sets[self.player_number]["down"]]:
+                    self.movePlayerCombined(315, time_passed)
+                else:
+                    self.movePlayerCombined(0, time_passed)
+            elif keys[key_sets[self.player_number]["down"]]:
+                if keys[key_sets[self.player_number]["left"]]:
+                    self.movePlayerCombined(225, time_passed)
+                else:
+                    self.movePlayerCombined(270, time_passed)
             elif keys[key_sets[self.player_number]["left"]]:
                 self.movePlayerCombined(180, time_passed)
-            elif keys[key_sets[self.player_number]["down"]]:
-                self.movePlayerCombined(270, time_passed)
 
     def update(self, time_passed):
         self.get_inputs(time_passed)
