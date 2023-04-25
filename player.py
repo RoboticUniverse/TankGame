@@ -28,12 +28,20 @@ class Player(pygame.sprite.Sprite):
         self.autoaim = True
         self.autoturn = True
 
-        self.image = pygame.image.load("sprites/Tank0.png")
+        self.picture = pygame.image.load("sprites/Tank0.png")
+        self.sprites = [[], [], [], []]
+        for row in range(4):
+            for col in range(4):
+                self.sprites[row].append(self.picture.subsurface((row * 64, col * 64), (64, 64)))
+        self.left_tread = 0
+        self.right_tread = 0
+
+        self.image = self.sprites[self.right_tread][self.left_tread]
         self.rect = self.image.get_rect(center=pos)
         self.x = pos[0]
         self.y = pos[1]
 
-        self.picture = pygame.image.load("sprites/Tank0.png")
+
 
     def getAngle(self):
         return self.angle
@@ -63,7 +71,7 @@ class Player(pygame.sprite.Sprite):
                 self.angle -= self.turn_speed * time_passed
                 if self.angle % 360 < endAngle:
                     self.angle = endAngle
-            self.image = pygame.transform.rotate(self.picture, int(self.angle))
+            self.image = pygame.transform.rotate(self.sprites[self.left_tread][self.right_tread], int(self.angle))
             self.rect.x = self.x - int(self.image.get_width() / 2)
             self.rect.y = self.y - int(self.image.get_height() / 2)
 
@@ -100,12 +108,12 @@ class Player(pygame.sprite.Sprite):
         if not self.autoturn:
             if keys[key_sets[self.player_number]["left"]] and not keys[key_sets[self.player_number]["right"]]:
                 self.angle += self.turn_speed * time_passed
-                self.image = pygame.transform.rotate(self.picture, int(self.angle))
+                self.image = pygame.transform.rotate(self.sprites[self.left_tread][self.right_tread], int(self.angle))
                 self.rect.x = self.x - int(self.image.get_width() / 2)
                 self.rect.y = self.y - int(self.image.get_height() / 2)
             elif keys[key_sets[self.player_number]["right"]] and not keys[key_sets[self.player_number]["left"]]:
                 self.angle -= self.turn_speed * time_passed
-                self.image = pygame.transform.rotate(self.picture, int(self.angle))
+                self.image = pygame.transform.rotate(self.sprites[self.left_tread][self.right_tread], int(self.angle))
                 self.rect.x = self.x - int(self.image.get_width() / 2)
                 self.rect.y = self.y - int(self.image.get_height() / 2)
             elif keys[key_sets[self.player_number]["up"]] and not keys[key_sets[self.player_number]["down"]]:
