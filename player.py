@@ -1,4 +1,5 @@
-import pygame, math
+import pygame
+import math
 
 from pygame.locals import *
 
@@ -22,13 +23,14 @@ class Player(pygame.sprite.Sprite):
 
         self.player_number = player_number
         self.angle = 0
+        self.turret_angle = 0
         self.speed = .2
         self.turn_speed = .2
         self.keyboard = True
-        self.autoaim = True
-        self.autoturn = True
+        self.autoaim = False
+        self.autoturn = False
 
-        self.picture = pygame.image.load("sprites/Tank0.png")
+        self.picture = pygame.image.load("sprites/Tank" + str(player_number) + ".png")
         self.sprites = [[], [], [], []]
         for row in range(4):
             for col in range(4):
@@ -37,14 +39,13 @@ class Player(pygame.sprite.Sprite):
         self.right_tread = 0
 
         self.image = self.sprites[self.right_tread][self.left_tread]
-        self.rect = self.image.get_rect(center=pos)
+        self.rect = self.image.get_rect(topleft=pos)
         self.x = pos[0]
         self.y = pos[1]
 
+        self.turret = pygame.image.load("sprites/Turret0.png")
+        self.turret_image = pygame.image.load("sprites/Turret0.png")
 
-
-    def getAngle(self):
-        return self.angle
 
     def movePlayerCombined(self, direction, time_passed):
         # reset the angle to between 0 and 360
@@ -57,7 +58,6 @@ class Player(pygame.sprite.Sprite):
         # if target matches currrent, move the player
         if self.angle == abs(endAngle % 360):
             self.movePlayer(time_passed, 1)
-        # rotate the player in the direction of the target
         else:
             if endAngle == 0:
                 if self.angle > 180:
@@ -87,8 +87,12 @@ class Player(pygame.sprite.Sprite):
         movement_y = math.sin(self.angle * math.pi / 180) * -1 * self.speed * time_passed
         self.x += movement_x * direction
         self.y += movement_y * direction
-        self.rect.x = self.x - int(self.image.get_width() / 2)
-        self.rect.y = self.y - int(self.image.get_height() / 2)
+        self.rect.x = self.x
+        self.rect.y = self.y
+
+    def blit(self, surface):
+        surface.blit(self.image, (self.rect.x - int(self.image.get_width() / 2), self.rect.y - int(self.image.get_height() / 2)))
+        surface.blit(self.turret, (self.rect.x - int(self.turret.get_width() / 2), self.rect.y - int(self.turret.get_height() / 2)))
 
     def get_inputs(self, time_passed):
         keys = pygame.key.get_pressed()
@@ -96,13 +100,9 @@ class Player(pygame.sprite.Sprite):
             if keys[key_sets[self.player_number]["left"]] and not keys[key_sets[self.player_number]["right"]]:
                 self.angle += self.turn_speed * time_passed
                 self.image = pygame.transform.rotate(self.sprites[self.left_tread][self.right_tread], int(self.angle))
-                self.rect.x = self.x - int(self.image.get_width() / 2)
-                self.rect.y = self.y - int(self.image.get_height() / 2)
             elif keys[key_sets[self.player_number]["right"]] and not keys[key_sets[self.player_number]["left"]]:
                 self.angle -= self.turn_speed * time_passed
                 self.image = pygame.transform.rotate(self.sprites[self.left_tread][self.right_tread], int(self.angle))
-                self.rect.x = self.x - int(self.image.get_width() / 2)
-                self.rect.y = self.y - int(self.image.get_height() / 2)
             elif keys[key_sets[self.player_number]["up"]] and not keys[key_sets[self.player_number]["down"]]:
                 self.movePlayer(time_passed, 1)
             elif keys[key_sets[self.player_number]["down"]] and not keys[key_sets[self.player_number]["up"]]:
@@ -128,6 +128,12 @@ class Player(pygame.sprite.Sprite):
                     self.movePlayerCombined(270, time_passed)
             elif keys[key_sets[self.player_number]["left"]]:
                 self.movePlayerCombined(180, time_passed)
+                self.movePlayerCombined(270, time_passed)
+        pos = pygame.mouse.get_pos()
+        if self.autoaim:
+            self.turret = pygame.transform.rotate(self.turret_image, int(self.angle))
+        else:
+            self.turret = pygame.transform.rotate(self.turret_image, int(self.turret_angle))
 
     def update(self, time_passed):
         self.get_inputs(time_passed)

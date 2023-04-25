@@ -1,4 +1,3 @@
-import pygame
 from wall import Wall
 from player import *
 
@@ -41,5 +40,6 @@ class Level:
     def run(self, time_passed):
         self.walls.draw(self.surface)
         self.players.update(time_passed)
-        self.players.draw(self.surface)
+        for p in self.players:
+            p.blit(self.surface)
 

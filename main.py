@@ -1,8 +1,3 @@
-import math
-import sys
-import pygame
-import random
-from pygame.locals import *
 from level import *
 from player import *
 from menu import *
@@ -12,11 +7,12 @@ height = 1000
 
 BACKGROUND = (100, 100, 100)
 FPS = 60
-cap_frame_rate = True
+cap_frame_rate = False
 show_fps = True
-skip_menu = False
+skip_menu = True
 
 in_level = False
+mouse_clicked = False
 
 
 if __name__ == '__main__':
@@ -43,16 +39,18 @@ if __name__ == '__main__':
             if event.type == QUIT:
                 pygame.quit()
                 sys.exit()
-            if event.type == MOUSEBUTTONDOWN:
-                level = Level(DISPLAYSURF, 1)
-                in_level = True
+            if event.type == MOUSEBUTTONDOWN or event.type == MOUSEBUTTONUP:
+                mouse_clicked = pygame.mouse.get_pressed()[0]
 
         time = timeClock.tick()
 
         if in_level:
             level.run(time)
         else:
-            menu.run()
+            if menu.run(mouse_clicked):
+                level = Level(DISPLAYSURF, 1)
+                in_level = True
+
         # pygame.draw.circle(DISPLAYSURF, (255, 0, 0), (100, 100), 2.5)
 
         if show_fps:
