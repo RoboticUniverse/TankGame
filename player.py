@@ -30,7 +30,7 @@ class Player(pygame.sprite.Sprite):
         self.shoot_cooldown = self.shot_speed
         self.keyboard = True
         self.autoaim = True
-        self.autoturn = False
+        self.autoturn = True
 
         self.picture = pygame.image.load("sprites/Tank" + str(player_number) + ".png")
         self.sprites = [[], [], [], []]
@@ -44,8 +44,9 @@ class Player(pygame.sprite.Sprite):
 
         self.image = self.sprites[self.right_tread][self.left_tread]
         self.rect = self.image.get_rect(center=pos)
-        self.rect.width += 4
-        self.rect.height += 4
+        self.hitbox_addition = -4
+        self.rect.width += self.hitbox_addition
+        self.rect.height += self.hitbox_addition
         self.x = self.rect.centerx
         self.y = self.rect.centery
 
@@ -64,42 +65,26 @@ class Player(pygame.sprite.Sprite):
             if keys[key_sets[self.player_number]["left"]] and not keys[key_sets[self.player_number]["right"]]:
                 self.angle += self.turn_speed * time_passed
                 if self.animation_cooldown == 0:
-                    self.left_tread += 1
-                    if self.left_tread > 3:
-                        self.left_tread = 0
-                    self.right_tread -= 1
-                    if self.right_tread < 0:
-                        self.right_tread = 3
+                    self.decrease_left_tread()
+                    self.increase_right_tread()
                 self.image = pygame.transform.rotate(self.sprites[self.left_tread][self.right_tread], int(self.angle))
             elif keys[key_sets[self.player_number]["right"]] and not keys[key_sets[self.player_number]["left"]]:
                 self.angle -= self.turn_speed * time_passed
                 if self.animation_cooldown == 0:
-                    self.right_tread += 1
-                    if self.right_tread > 3:
-                        self.right_tread = 0
-                    self.left_tread -= 1
-                    if self.left_tread < 0:
-                        self.left_tread = 3
+                    self.increase_right_tread()
+                    self.decrease_left_tread()
                 self.image = pygame.transform.rotate(self.sprites[self.left_tread][self.right_tread], int(self.angle))
             elif keys[key_sets[self.player_number]["up"]] and not keys[key_sets[self.player_number]["down"]]:
                 self.move_player(time_passed, 1)
                 if self.animation_cooldown == 0:
-                    self.right_tread += 1
-                    if self.right_tread > 3:
-                        self.right_tread = 0
-                    self.left_tread += 1
-                    if self.left_tread > 3:
-                        self.left_tread = 0
+                    self.increase_right_tread()
+                    self.increase_left_tread()
                 self.image = pygame.transform.rotate(self.sprites[self.left_tread][self.right_tread], int(self.angle))
             elif keys[key_sets[self.player_number]["down"]] and not keys[key_sets[self.player_number]["up"]]:
                 self.move_player(time_passed, -1)
                 if self.animation_cooldown == 0:
-                    self.right_tread -= 1
-                    if self.right_tread < 0:
-                        self.right_tread = 3
-                    self.left_tread -= 1
-                    if self.left_tread < 0:
-                        self.left_tread = 3
+                    self.decrease_right_tread()
+                    self.decrease_left_tread()
                 self.image = pygame.transform.rotate(self.sprites[self.left_tread][self.right_tread], int(self.angle))
         else:
             if keys[key_sets[self.player_number]["up"]]:
@@ -136,47 +121,84 @@ class Player(pygame.sprite.Sprite):
             self.bullets.append(Bullet((self.x, self.y), (1, 0)))
             self.shoot_cooldown = 0
 
-    def move_player(self, time_passed, direction):
-        movement_x = math.cos(self.angle * math.pi / 180) * self.speed * time_passed
-        movement_y = math.sin(self.angle * math.pi / 180) * -1 * self.speed * time_passed
-        self.x += movement_x * direction
-        self.y += movement_y * direction
-        self.rect.x = self.x - 34
-        self.rect.y = self.y - 34
-
     def move_player_combined(self, direction, time_passed):
         # reset the angle to between 0 and 360
         self.angle = self.angle % 360
         if self.angle < 0:
             self.angle = self.angle - 360
-        print(self.angle)
         # target angle is put to between 0 and 360
         end_angle = abs(direction % 360)
         # if target matches current, move the player
         if self.angle == abs(end_angle % 360):
+            if self.animation_cooldown == 0:
+                self.increase_right_tread()
+                self.increase_left_tread()
+                self.image = pygame.transform.rotate(self.sprites[self.left_tread][self.right_tread], int(self.angle))
             self.move_player(time_passed, 1)
+
         else:
             if end_angle == 0:
                 if self.angle > 180:
                     self.angle += self.turn_speed * time_passed
+                    if self.animation_cooldown == 0:
+                        self.increase_left_tread()
+                        self.decrease_right_tread()
                     if self.angle % 360 < 180:
                         self.angle = end_angle
                 else:
                     self.angle -= self.turn_speed * time_passed
+                    if self.animation_cooldown == 0:
+                        self.increase_right_tread()
+                        self.decrease_left_tread()
                     if self.angle % 360 > 180:
                         self.angle = 0
 
             elif end_angle - self.angle <= 180 and (end_angle - self.angle > 0 or end_angle - self.angle < -180):
                 self.angle += self.turn_speed * time_passed
+                if self.animation_cooldown == 0:
+                    self.increase_left_tread()
+                    self.decrease_right_tread()
                 if self.angle % 360 > end_angle and self.angle - end_angle < 10:
                     self.angle = end_angle
             else:
                 self.angle -= self.turn_speed * time_passed
+                if self.animation_cooldown == 0:
+                    self.increase_right_tread()
+                    self.decrease_left_tread()
                 if self.angle % 360 < end_angle and end_angle - self.angle < 10:
                     self.angle = end_angle
             self.image = pygame.transform.rotate(self.sprites[self.left_tread][self.right_tread], int(self.angle))
-            self.rect.x = self.x - int(self.image.get_width() / 2)
-            self.rect.y = self.y - int(self.image.get_height() / 2)
+            self.rect.x = self.x - (self.rect.width/2)
+            self.rect.y = self.y - (self.rect.width/2)
+
+    def move_player(self, time_passed, direction):
+        movement_x = math.cos(self.angle * math.pi / 180) * self.speed * time_passed
+        movement_y = math.sin(self.angle * math.pi / 180) * -1 * self.speed * time_passed
+        self.x += movement_x * direction
+        self.y += movement_y * direction
+        self.rect.x = self.x - self.rect.width/2
+        self.rect.y = self.y - self.rect.width/2
+
+    def increase_left_tread(self):
+        self.left_tread += 1
+        if self.left_tread > 3:
+            self.left_tread = 0
+
+    def increase_right_tread(self):
+        self.right_tread += 1
+        if self.right_tread > 3:
+            self.right_tread = 0
+
+    def decrease_left_tread(self):
+        self.left_tread -= 1
+        if self.left_tread < 0:
+            self.left_tread = 3
+
+    def decrease_right_tread(self):
+        self.right_tread -= 1
+        if self.right_tread < 0:
+            self.right_tread = 3
+
 
     def check_wall_collisions(self, walls):
         for sprite in walls.sprites():
@@ -191,19 +213,15 @@ class Player(pygame.sprite.Sprite):
                     continue
 
                 if lap_list[0] is left_over_lap:
-                    print("left")
                     self.rect.left = sprite.rect.right
                     self.x = self.rect.centerx
                 elif lap_list[0] is right_over_lap:
-                    print("right")
                     self.rect.right = sprite.rect.left
                     self.x = self.rect.centerx
                 elif lap_list[0] is top_over_lap:
-                    print("up")
                     self.rect.top = sprite.rect.bottom
                     self.y = self.rect.centery
                 else:
-                    print("down")
                     self.rect.bottom = sprite.rect.top
                     self.y = self.rect.centery
 

@@ -7,7 +7,7 @@ from menu import *
 width = 1480
 height = 1000
 
-BACKGROUND = (100, 100, 100)
+BACKGROUND = (82, 45, 5)
 FPS = 60
 cap_frame_rate = False
 show_fps = True
