@@ -32,7 +32,7 @@ class Player(pygame.sprite.Sprite):
         self.shoot_cooldown = self.shot_speed
         self.keyboard = True
         self.autoaim = False
-        self.autoturn = False
+        self.autoturn = True
 
         self.picture = pygame.image.load("sprites/Tank" + str(player_number) + ".png")
         self.sprites = [[], [], [], []]
@@ -146,7 +146,6 @@ class Player(pygame.sprite.Sprite):
                     self.move_player_combined(270, time_passed)
             elif keys[key_sets[self.player_number]["left"]]:
                 self.move_player_combined(180, time_passed)
-                self.move_player_combined(270, time_passed)
         pos = pygame.mouse.get_pos()
         if self.autoaim:
             self.turret = pygame.transform.rotate(self.turret_image, int(self.angle))
