@@ -1,6 +1,8 @@
 import pygame, math
+import numpy as np
 
 from pygame.locals import *
+from numpy import array
 
 up_kb = [K_w, K_UP]
 down_kb = [K_s, K_DOWN]
@@ -45,6 +47,10 @@ class Player(pygame.sprite.Sprite):
 
     def getAngle(self):
         return self.angle
+    def getX(self):
+        return self.x
+    def getY(self):
+        return self.y
 
     def movePlayerCombined(self, direction, time_passed):
         # reset the angle to between 0 and 360
@@ -89,6 +95,10 @@ class Player(pygame.sprite.Sprite):
         self.y += movement_y * direction
         self.rect.x = self.x - int(self.image.get_width() / 2)
         self.rect.y = self.y - int(self.image.get_height() / 2)
+
+    def enemyAI(self, player):
+        pass
+
 
     def get_inputs(self, time_passed):
         keys = pygame.key.get_pressed()
