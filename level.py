@@ -4,9 +4,9 @@ from player import *
 
 
 class Level:
-    def __init__(self, display_surface, number=1):
+    def __init__(self, display_surface, level_number=1):
         self.surface = display_surface
-        self.number = number
+        self.level_number = level_number
         self.walls = pygame.sprite.Group()
         self.players = pygame.sprite.Group()
         self.create_outline()
@@ -14,7 +14,7 @@ class Level:
     def create_outline(self):
         player_number = 0
         try:
-            room = pygame.image.load("sprites/levels/" + str(self.number) + ".png")
+            room = pygame.image.load("sprites/levels/" + str(self.level_number) + ".png")
             for h in range(room.get_height()):
                 for w in range(room.get_width()):
                     if room.get_at((w, h)) == (0, 0, 0, 255):
@@ -27,20 +27,12 @@ class Level:
                     # elif room.get_at((w, h)) == (0, 255, 0, 255):
                     #     enemies.append((w, h))
         except FileNotFoundError:
-            print("Requested Level " + str(self.number) + " Does Not Exist")
-
-    def get_walls(self):
-        return self.walls
-
-    def get_number(self):
-        return self.number
+            print("Requested Level " + str(self.level_number) + " Does Not Exist")
 
     # def __str__(self):
     #     return "X: " + str(self.x) + ", Y: " + str(self.y)
 
     def run(self, time_passed):
         self.walls.draw(self.surface)
-        self.players.update(time_passed, self.walls)
-        for p in self.players:
-            p.blit(self.surface)
+        self.players.update(time_passed, self.walls, self.surface)
 
