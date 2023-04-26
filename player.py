@@ -51,7 +51,6 @@ class Player(pygame.sprite.Sprite):
         self.angle = self.angle % 360
         if self.angle < 0:
             self.angle = self.angle - 360
-        print(self.angle)
         # target angle is put to between 0 and 360
         endAngle = abs(direction % 360)
         # if target matches currrent, move the player
@@ -107,7 +106,6 @@ class Player(pygame.sprite.Sprite):
                 self.movePlayer(time_passed, 1)
             elif keys[key_sets[self.player_number]["down"]] and not keys[key_sets[self.player_number]["up"]]:
                 self.movePlayer(time_passed, -1)
-                print('move player')
         else:
             if keys[key_sets[self.player_number]["up"]]:
                 if keys[key_sets[self.player_number]["right"]]:
@@ -129,5 +127,54 @@ class Player(pygame.sprite.Sprite):
             elif keys[key_sets[self.player_number]["left"]]:
                 self.movePlayerCombined(180, time_passed)
 
-    def update(self, time_passed):
+    def check_wall_collisions(self, walls):
+        for sprite in walls.sprites():
+            if sprite.rect.colliderect(self.rect):
+                left_over_lap = sprite.rect.right - self.rect.left
+                right_over_lap = self.rect.right - sprite.rect.left
+                top_over_lap = sprite.rect.bottom - self.rect.top
+                bottom_over_lap = self.rect.bottom - sprite.rect.top
+                if left_over_lap < right_over_lap:
+                    if top_over_lap < bottom_over_lap:
+                        if left_over_lap < top_over_lap:
+                            print(1)
+                            self.rect.left = sprite.rect.right
+                            (self.x, self.y) = self.rect.center
+                        else:
+                            print(2)
+                            self.rect.top = sprite.rect.bottom
+                            (self.x, self.y) = self.rect.center
+                    else:
+                        if left_over_lap < top_over_lap:
+                            print(left_over_lap, top_over_lap)
+                            print(3)
+                            self.rect.left = sprite.rect.right
+                            (self.x, self.y) = self.rect.center
+                        else:
+                            print(4)
+                            self.rect.bottom = sprite.rect.top
+                            (self.x, self.y) = self.rect.center
+                else:
+                    if top_over_lap < bottom_over_lap:
+                        if right_over_lap < top_over_lap:
+                            print(5)
+                            self.rect.right = sprite.rect.left
+                            (self.x, self.y) = self.rect.center
+                        else:
+                            print(6)
+                            self.rect.top = sprite.rect.bottom
+                            (self.x, self.y) = self.rect.center
+                    else:
+                        if right_over_lap < top_over_lap:
+                            print(7)
+                            self.rect.right = sprite.rect.left
+                            (self.x, self.y) = self.rect.center
+                        else:
+                            print(8)
+                            self.rect.bottom = sprite.rect.top
+                            (self.x, self.y) = self.rect.center
+
+
+    def update(self, time_passed, walls):
         self.get_inputs(time_passed)
+        #self.check_wall_collisions(walls)

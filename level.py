@@ -40,6 +40,6 @@ class Level:
 
     def run(self, time_passed):
         self.walls.draw(self.surface)
-        self.players.update(time_passed)
+        self.players.update(time_passed, self.walls)
         self.players.draw(self.surface)
 
