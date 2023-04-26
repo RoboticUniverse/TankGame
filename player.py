@@ -1,8 +1,6 @@
-import pygame, math
-import numpy as np
+import math
 
 from pygame.locals import *
-from numpy import array
 from bullet import *
 
 up_kb = [K_w, K_UP]
@@ -100,18 +98,15 @@ class Player(pygame.sprite.Sprite):
 
     def blit(self, surface):
         surface.blit(self.image, (self.x - int(self.image.get_width() / 2), self.y - int(self.image.get_height() / 2)))
-        # surface.blit(self.image, (self.rect.x - int(self.image.get_width() / 2), self.rect.y - int(self.image.get_height() / 2)))
         surface.blit(self.turret, (self.x - int(self.turret.get_width() / 2), self.y - int(self.turret.get_height() / 2)))
-        # surface.blit(self.turret, (self.rect.x - int(self.turret.get_width() / 2), self.rect.y - int(self.turret.get_height() / 2)))
         # pygame.draw.rect(surface, (255, 0, 0), self.rect)
 
     def blit_bullets(self, surface):
         for b in self.bullets:
-            surface.blit(self.b)
+            surface.blit(b, (self.x, self.y))
 
     def enemyAI(self, player):
         pass
-
 
     def get_inputs(self, time_passed):
         keys = pygame.key.get_pressed()

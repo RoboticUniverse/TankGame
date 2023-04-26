@@ -1,3 +1,5 @@
+import math
+
 from level import *
 from player import *
 from menu import *
