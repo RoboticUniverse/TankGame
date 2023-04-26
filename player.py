@@ -1,6 +1,7 @@
 import pygame, math
 
 from pygame.locals import *
+from bullet import *
 
 up_kb = [K_w, K_UP]
 down_kb = [K_s, K_DOWN]
@@ -22,13 +23,16 @@ class Player(pygame.sprite.Sprite):
 
         self.player_number = player_number
         self.angle = 0
+        self.turret_angle = 0
         self.speed = .2
         self.turn_speed = .2
+        self.shot_speed = 1000
+        self.shoot_cooldown = self.shot_speed
         self.keyboard = True
-        self.autoaim = True
+        self.autoaim = False
         self.autoturn = True
 
-        self.picture = pygame.image.load("sprites/Tank0.png")
+        self.picture = pygame.image.load("sprites/Tank" + str(player_number) + ".png")
         self.sprites = [[], [], [], []]
         for row in range(4):
             for col in range(4):
@@ -41,22 +45,24 @@ class Player(pygame.sprite.Sprite):
         self.x = pos[0]
         self.y = pos[1]
 
-
+        self.turret = pygame.image.load("sprites/Turret0.png")
+        self.turret_image = pygame.image.load("sprites/Turret0.png")
+        self.bullets = []
 
     def getAngle(self):
         return self.angle
 
-    def movePlayerCombined(self, direction, time_passed):
+    def move_player_combined(self, direction, time_passed):
         # reset the angle to between 0 and 360
         self.angle = self.angle % 360
         if self.angle < 0:
             self.angle = self.angle - 360
+        print(self.angle)
         # target angle is put to between 0 and 360
         endAngle = abs(direction % 360)
         # if target matches currrent, move the player
         if self.angle == abs(endAngle % 360):
-            self.movePlayer(time_passed, 1)
-        # rotate the player in the direction of the target
+            self.move_player(time_passed, 1)
         else:
             if endAngle == 0:
                 if self.angle > 180:
@@ -80,14 +86,25 @@ class Player(pygame.sprite.Sprite):
             self.rect.x = self.x - int(self.image.get_width() / 2)
             self.rect.y = self.y - int(self.image.get_height() / 2)
 
-
-    def movePlayer(self, time_passed, direction):
+    def move_player(self, time_passed, direction):
         movement_x = math.cos(self.angle * math.pi / 180) * self.speed * time_passed
         movement_y = math.sin(self.angle * math.pi / 180) * -1 * self.speed * time_passed
         self.x += movement_x * direction
         self.y += movement_y * direction
-        self.rect.x = self.x - int(self.image.get_width() / 2)
-        self.rect.y = self.y - int(self.image.get_height() / 2)
+        self.rect.x = self.x - 32
+        self.rect.y = self.y - 32
+
+    def blit(self, surface):
+        surface.blit(self.image, (self.x - int(self.image.get_width() / 2), self.y - int(self.image.get_height() / 2)))
+        surface.blit(self.turret, (self.x - int(self.turret.get_width() / 2), self.y - int(self.turret.get_height() / 2)))
+        # pygame.draw.rect(surface, (255, 0, 0), self.rect)
+
+    def blit_bullets(self, surface):
+        for b in self.bullets:
+            surface.blit(b, (self.x, self.y))
+
+    def enemyAI(self, player):
+        pass
 
     def get_inputs(self, time_passed):
         keys = pygame.key.get_pressed()
@@ -95,37 +112,46 @@ class Player(pygame.sprite.Sprite):
             if keys[key_sets[self.player_number]["left"]] and not keys[key_sets[self.player_number]["right"]]:
                 self.angle += self.turn_speed * time_passed
                 self.image = pygame.transform.rotate(self.sprites[self.left_tread][self.right_tread], int(self.angle))
-                self.rect.x = self.x - int(self.image.get_width() / 2)
-                self.rect.y = self.y - int(self.image.get_height() / 2)
             elif keys[key_sets[self.player_number]["right"]] and not keys[key_sets[self.player_number]["left"]]:
                 self.angle -= self.turn_speed * time_passed
                 self.image = pygame.transform.rotate(self.sprites[self.left_tread][self.right_tread], int(self.angle))
-                self.rect.x = self.x - int(self.image.get_width() / 2)
-                self.rect.y = self.y - int(self.image.get_height() / 2)
             elif keys[key_sets[self.player_number]["up"]] and not keys[key_sets[self.player_number]["down"]]:
-                self.movePlayer(time_passed, 1)
+                self.move_player(time_passed, 1)
             elif keys[key_sets[self.player_number]["down"]] and not keys[key_sets[self.player_number]["up"]]:
-                self.movePlayer(time_passed, -1)
+                self.move_player(time_passed, -1)
         else:
             if keys[key_sets[self.player_number]["up"]]:
                 if keys[key_sets[self.player_number]["right"]]:
-                    self.movePlayerCombined(45, time_passed)
+                    self.move_player_combined(45, time_passed)
                 elif keys[key_sets[self.player_number]["left"]]:
-                    self.movePlayerCombined(135, time_passed)
+                    self.move_player_combined(135, time_passed)
                 else:
-                    self.movePlayerCombined(90, time_passed)
+                    self.move_player_combined(90, time_passed)
             elif keys[key_sets[self.player_number]["right"]]:
                 if keys[key_sets[self.player_number]["down"]]:
-                    self.movePlayerCombined(315, time_passed)
+                    self.move_player_combined(315, time_passed)
                 else:
-                    self.movePlayerCombined(0, time_passed)
+                    self.move_player_combined(0, time_passed)
             elif keys[key_sets[self.player_number]["down"]]:
                 if keys[key_sets[self.player_number]["left"]]:
-                    self.movePlayerCombined(225, time_passed)
+                    self.move_player_combined(225, time_passed)
                 else:
-                    self.movePlayerCombined(270, time_passed)
+                    self.move_player_combined(270, time_passed)
             elif keys[key_sets[self.player_number]["left"]]:
-                self.movePlayerCombined(180, time_passed)
+                self.move_player_combined(180, time_passed)
+        pos = pygame.mouse.get_pos()
+        if self.autoaim:
+            self.turret = pygame.transform.rotate(self.turret_image, int(self.angle))
+        else:
+            v1 = pygame.math.Vector2(1, 0)
+            v2 = pygame.math.Vector2(pos[0] - self.x, self.y - pos[1])
+            self.turret_angle = v1.angle_to(v2)
+            self.turret = pygame.transform.rotate(self.turret_image, int(self.turret_angle))
+        self.shoot_cooldown += time_passed
+        if keys[key_sets[self.player_number]["shoot"]] and self.shoot_cooldown >= self.shot_speed:
+            print("shoot")
+            self.bullets.append(Bullet((self.x, self.y), (1, 0)))
+            self.shoot_cooldown = 0
 
     def check_wall_collisions(self, walls):
         for sprite in walls.sprites():
