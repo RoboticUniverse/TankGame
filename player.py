@@ -39,28 +39,31 @@ class Player(pygame.sprite.Sprite):
                 self.sprites[row].append(self.picture.subsurface((row * 64, col * 64), (64, 64)))
         self.left_tread = 0
         self.right_tread = 0
-        self.animation_buffer = 1
+        self.animation_speed = 50
+        self.animation_cooldown = self.animation_speed
 
         self.image = self.sprites[self.right_tread][self.left_tread]
         self.rect = self.image.get_rect(center=pos)
-        self.x = pos[0]
-        self.y = pos[1]
+        self.rect.width += 4
+        self.rect.height += 4
+        self.x = self.rect.centerx
+        self.y = self.rect.centery
 
         self.turret = pygame.image.load("sprites/Turret0.png")
         self.turret_image = pygame.image.load("sprites/Turret0.png")
         self.bullets = []
 
     def update_animation_buffer(self, time_passed):
-        self.animation_buffer += time_passed
-        if self.animation_buffer > 50:
-            self.animation_buffer = 0
+        self.animation_cooldown += time_passed
+        if self.animation_cooldown > self.animation_speed:
+            self.animation_cooldown = 0
 
     def get_inputs(self, time_passed):
         keys = pygame.key.get_pressed()
         if not self.autoturn:
             if keys[key_sets[self.player_number]["left"]] and not keys[key_sets[self.player_number]["right"]]:
                 self.angle += self.turn_speed * time_passed
-                if self.animation_buffer == 0:
+                if self.animation_cooldown == 0:
                     self.left_tread += 1
                     if self.left_tread > 3:
                         self.left_tread = 0
@@ -70,7 +73,7 @@ class Player(pygame.sprite.Sprite):
                 self.image = pygame.transform.rotate(self.sprites[self.left_tread][self.right_tread], int(self.angle))
             elif keys[key_sets[self.player_number]["right"]] and not keys[key_sets[self.player_number]["left"]]:
                 self.angle -= self.turn_speed * time_passed
-                if self.animation_buffer == 0:
+                if self.animation_cooldown == 0:
                     self.right_tread += 1
                     if self.right_tread > 3:
                         self.right_tread = 0
@@ -80,7 +83,7 @@ class Player(pygame.sprite.Sprite):
                 self.image = pygame.transform.rotate(self.sprites[self.left_tread][self.right_tread], int(self.angle))
             elif keys[key_sets[self.player_number]["up"]] and not keys[key_sets[self.player_number]["down"]]:
                 self.move_player(time_passed, 1)
-                if self.animation_buffer == 0:
+                if self.animation_cooldown == 0:
                     self.right_tread += 1
                     if self.right_tread > 3:
                         self.right_tread = 0
@@ -90,7 +93,7 @@ class Player(pygame.sprite.Sprite):
                 self.image = pygame.transform.rotate(self.sprites[self.left_tread][self.right_tread], int(self.angle))
             elif keys[key_sets[self.player_number]["down"]] and not keys[key_sets[self.player_number]["up"]]:
                 self.move_player(time_passed, -1)
-                if self.animation_buffer == 0:
+                if self.animation_cooldown == 0:
                     self.right_tread -= 1
                     if self.right_tread < 0:
                         self.right_tread = 3
@@ -138,8 +141,8 @@ class Player(pygame.sprite.Sprite):
         movement_y = math.sin(self.angle * math.pi / 180) * -1 * self.speed * time_passed
         self.x += movement_x * direction
         self.y += movement_y * direction
-        self.rect.x = self.x - 32
-        self.rect.y = self.y - 32
+        self.rect.x = self.x - 34
+        self.rect.y = self.y - 34
 
     def move_player_combined(self, direction, time_passed):
         # reset the angle to between 0 and 360
@@ -175,15 +178,6 @@ class Player(pygame.sprite.Sprite):
             self.rect.x = self.x - int(self.image.get_width() / 2)
             self.rect.y = self.y - int(self.image.get_height() / 2)
 
-    def blit(self, surface):
-        surface.blit(self.image, (self.x - int(self.image.get_width() / 2), self.y - int(self.image.get_height() / 2)))
-        surface.blit(self.turret, (self.x - int(self.turret.get_width() / 2), self.y - int(self.turret.get_height() / 2)))
-        # pygame.draw.rect(surface, (255, 0, 0), self.rect)
-
-    def blit_bullets(self, surface):
-        for b in self.bullets:
-            surface.blit(b, (self.x, self.y))
-
     def check_wall_collisions(self, walls):
         for sprite in walls.sprites():
             if sprite.rect.colliderect(self.rect):
@@ -191,48 +185,41 @@ class Player(pygame.sprite.Sprite):
                 right_over_lap = self.rect.right - sprite.rect.left
                 top_over_lap = sprite.rect.bottom - self.rect.top
                 bottom_over_lap = self.rect.bottom - sprite.rect.top
-                if left_over_lap < right_over_lap:
-                    if top_over_lap < bottom_over_lap:
-                        if left_over_lap < top_over_lap:
-                            print(1)
-                            self.rect.left = sprite.rect.right
-                            (self.x, self.y) = self.rect.center
-                        else:
-                            print(2)
-                            self.rect.top = sprite.rect.bottom
-                            (self.x, self.y) = self.rect.center
-                    else:
-                        if left_over_lap < top_over_lap:
-                            print(left_over_lap, top_over_lap)
-                            print(3)
-                            self.rect.left = sprite.rect.right
-                            (self.x, self.y) = self.rect.center
-                        else:
-                            print(4)
-                            self.rect.bottom = sprite.rect.top
-                            (self.x, self.y) = self.rect.center
+                lap_list = [left_over_lap, right_over_lap, top_over_lap, bottom_over_lap]
+                lap_list.sort()
+                if lap_list[0] == lap_list[1]:
+                    continue
+
+                if lap_list[0] is left_over_lap:
+                    print("left")
+                    self.rect.left = sprite.rect.right
+                    self.x = self.rect.centerx
+                elif lap_list[0] is right_over_lap:
+                    print("right")
+                    self.rect.right = sprite.rect.left
+                    self.x = self.rect.centerx
+                elif lap_list[0] is top_over_lap:
+                    print("up")
+                    self.rect.top = sprite.rect.bottom
+                    self.y = self.rect.centery
                 else:
-                    if top_over_lap < bottom_over_lap:
-                        if right_over_lap < top_over_lap:
-                            print(5)
-                            self.rect.right = sprite.rect.left
-                            (self.x, self.y) = self.rect.center
-                        else:
-                            print(6)
-                            self.rect.top = sprite.rect.bottom
-                            (self.x, self.y) = self.rect.center
-                    else:
-                        if right_over_lap < top_over_lap:
-                            print(7)
-                            self.rect.right = sprite.rect.left
-                            (self.x, self.y) = self.rect.center
-                        else:
-                            print(8)
-                            self.rect.bottom = sprite.rect.top
-                            (self.x, self.y) = self.rect.center
+                    print("down")
+                    self.rect.bottom = sprite.rect.top
+                    self.y = self.rect.centery
+
+    def blit(self, surface):
+        surface.blit(self.image, (self.x - int(self.image.get_width() / 2), self.y - int(self.image.get_height() / 2)))
+        surface.blit(self.turret, (self.x - int(self.turret.get_width() / 2), self.y - int(self.turret.get_height() / 2)))
+        if False:
+            pygame.draw.rect(surface, (255, 0, 0), self.rect)
+            pygame.draw.circle(surface, "Pink", (self.x, self.y), 3)
+
+    def blit_bullets(self, surface):
+        for b in self.bullets:
+            surface.blit(b, (self.x, self.y))
 
     def update(self, time_passed, walls, surface):
         self.update_animation_buffer(time_passed)
         self.get_inputs(time_passed)
-        #self.check_wall_collisions(walls)
+        self.check_wall_collisions(walls)
         self.blit(surface)
