@@ -29,7 +29,7 @@ class Player(pygame.sprite.Sprite):
         self.shot_speed = 1000
         self.shoot_cooldown = self.shot_speed
         self.keyboard = True
-        self.autoaim = True
+        self.autoaim = False
         self.autoturn = True
 
         self.picture = pygame.image.load("sprites/Tank" + str(player_number) + ".png")
@@ -44,7 +44,7 @@ class Player(pygame.sprite.Sprite):
 
         self.image = self.sprites[self.right_tread][self.left_tread]
         self.rect = self.image.get_rect(center=pos)
-        self.hitbox_addition = -4
+        self.hitbox_addition = 0
         self.rect.width += self.hitbox_addition
         self.rect.height += self.hitbox_addition
         self.x = self.rect.centerx
@@ -234,10 +234,11 @@ class Player(pygame.sprite.Sprite):
 
     def blit_bullets(self, surface):
         for b in self.bullets:
-            surface.blit(b, (self.x, self.y))
+            surface.blit(b.image, (self.x, self.y))
 
     def update(self, time_passed, walls, surface):
         self.update_animation_buffer(time_passed)
         self.get_inputs(time_passed)
         self.check_wall_collisions(walls)
         self.blit(surface)
+        self.blit_bullets(surface)
