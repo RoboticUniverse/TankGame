@@ -9,5 +9,5 @@ class Bullet(pygame.sprite.Sprite):
         self.dx = direction[0]
         self.dy = direction[1]
 
-    def update(self):
+    def update(self, time_passed):
         pass

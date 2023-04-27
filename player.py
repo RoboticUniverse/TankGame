@@ -52,7 +52,7 @@ class Player(pygame.sprite.Sprite):
 
         self.turret = pygame.image.load("sprites/Turret0.png")
         self.turret_image = pygame.image.load("sprites/Turret0.png")
-        self.bullets = []
+        self.bullets = pygame.sprite.Group()
 
     def update_animation_buffer(self, time_passed):
         self.animation_cooldown += time_passed
@@ -118,7 +118,7 @@ class Player(pygame.sprite.Sprite):
         self.shoot_cooldown += time_passed
         if keys[key_sets[self.player_number]["shoot"]] and self.shoot_cooldown >= self.shot_speed:
             print("shoot")
-            self.bullets.append(Bullet((self.x, self.y), (1, 0)))
+            self.bullets.add(Bullet((self.x, self.y), (1, 0)))
             self.shoot_cooldown = 0
 
     def move_player_combined(self, direction, time_passed):
