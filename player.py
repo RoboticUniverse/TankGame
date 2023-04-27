@@ -64,12 +64,16 @@ class Player(pygame.sprite.Sprite):
         if not self.autoturn:
             if keys[key_sets[self.player_number]["left"]] and not keys[key_sets[self.player_number]["right"]]:
                 self.angle += self.turn_speed * time_passed
+                if self.autoaim:
+                    self.turret_angle = self.angle
                 if self.animation_cooldown == 0:
                     self.decrease_left_tread()
                     self.increase_right_tread()
                 self.image = pygame.transform.rotate(self.sprites[self.left_tread][self.right_tread], int(self.angle))
             elif keys[key_sets[self.player_number]["right"]] and not keys[key_sets[self.player_number]["left"]]:
                 self.angle -= self.turn_speed * time_passed
+                if self.autoaim:
+                    self.turret_angle = self.angle
                 if self.animation_cooldown == 0:
                     self.increase_right_tread()
                     self.decrease_left_tread()
@@ -109,7 +113,7 @@ class Player(pygame.sprite.Sprite):
 
         pos = pygame.mouse.get_pos()
         if self.autoaim:
-            self.turret = pygame.transform.rotate(self.turret_image, int(self.angle))
+            self.turret = pygame.transform.rotate(self.turret_image, int(self.turret_angle))
         else:
             v1 = pygame.math.Vector2(1, 0)
             v2 = pygame.math.Vector2(pos[0] - self.x, self.y - pos[1])
@@ -118,7 +122,7 @@ class Player(pygame.sprite.Sprite):
         self.shoot_cooldown += time_passed
         if keys[key_sets[self.player_number]["shoot"]] and self.shoot_cooldown >= self.shot_speed:
             print("shoot")
-            self.bullets.add(Bullet((self.x, self.y), (1, 0)))
+            self.bullets.add(Bullet((self.x + math.cos(self.turret_angle * math.pi / 180) * 64, self.y + math.sin(self.turret_angle * math.pi / 180) * -64), (math.cos(self.turret_angle * math.pi / 180), math.sin(self.turret_angle * math.pi / 180) * -1)))
             self.shoot_cooldown = 0
 
     def move_player_combined(self, direction, time_passed):
