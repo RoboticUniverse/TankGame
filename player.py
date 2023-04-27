@@ -30,7 +30,7 @@ class Player(pygame.sprite.Sprite):
         self.shoot_cooldown = self.shot_speed
         self.keyboard = True
         self.autoaim = False
-        self.autoturn = True
+        self.autoturn = False
 
         self.picture = pygame.image.load("sprites/Tank" + str(player_number) + ".png")
         self.sprites = [[], [], [], []]
@@ -228,17 +228,17 @@ class Player(pygame.sprite.Sprite):
     def blit(self, surface):
         surface.blit(self.image, (self.x - int(self.image.get_width() / 2), self.y - int(self.image.get_height() / 2)))
         surface.blit(self.turret, (self.x - int(self.turret.get_width() / 2), self.y - int(self.turret.get_height() / 2)))
-        if False:
-            pygame.draw.rect(surface, (255, 0, 0), self.rect)
-            pygame.draw.circle(surface, "Pink", (self.x, self.y), 3)
+        # pygame.draw.rect(surface, (255, 0, 0), self.rect)
+        # pygame.draw.circle(surface, "Pink", (self.x, self.y), 3)
 
     def blit_bullets(self, surface):
         for b in self.bullets:
-            surface.blit(b.image, (self.x, self.y))
+            surface.blit(b.image, (b.x - int(b.image.get_width() / 2), b.y - int(b.image.get_width() / 2)))
 
     def update(self, time_passed, walls, surface):
         self.update_animation_buffer(time_passed)
         self.get_inputs(time_passed)
         self.check_wall_collisions(walls)
+        self.bullets.update(time_passed)
         self.blit(surface)
         self.blit_bullets(surface)
