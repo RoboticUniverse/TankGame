@@ -26,11 +26,12 @@ class Player(pygame.sprite.Sprite):
         self.turret_angle = 0
         self.speed = .2
         self.turn_speed = .2
+        self.tolerance = 25
         self.shot_speed = 1000
         self.shoot_cooldown = self.shot_speed
         self.keyboard = True
         self.autoaim = False
-        self.autoturn = False
+        self.autoturn = True
 
         self.picture = pygame.image.load("sprites/Tank" + str(player_number) + ".png")
         self.sprites = [[], [], [], []]
@@ -128,6 +129,7 @@ class Player(pygame.sprite.Sprite):
     def move_player_combined(self, direction, time_passed):
         # reset the angle to between 0 and 360
         self.angle = self.angle % 360
+        print(self.angle)
         if self.angle < 0:
             self.angle = self.angle - 360
         # target angle is put to between 0 and 360
@@ -139,6 +141,22 @@ class Player(pygame.sprite.Sprite):
                 self.increase_left_tread()
                 self.image = pygame.transform.rotate(self.sprites[self.left_tread][self.right_tread], int(self.angle))
             self.move_player(time_passed, 1)
+        elif ((self.angle + 180) % 360) - abs(end_angle % 360) < self.tolerance and ((self.angle + 180) % 360) - abs(end_angle % 360) > 0:
+            print('trigger')
+            self.angle += self.turn_speed * time_passed
+            if (self.angle + 180) % 360 > end_angle and abs(self.angle - end_angle) > 0 :
+                self.angle = end_angle - 180
+        elif abs(end_angle % 360) - (self.angle + 180) % 360 < self.tolerance and abs(end_angle % 360) - (self.angle + 180) % 360 > 0:
+            print('trigger')
+            self.angle -= self.turn_speed * time_passed
+            if (self.angle + 180) % 360 < end_angle and abs(self.angle - end_angle) > 0:
+                self.angle = end_angle - 180
+        elif (self.angle + 180) % 360 == abs(end_angle % 360):
+            if self.animation_cooldown == 0:
+                self.decrease_right_tread()
+                self.decrease_left_tread()
+                self.image = pygame.transform.rotate(self.sprites[self.left_tread][self.right_tread], int(self.angle))
+            self.move_player(time_passed, -1)
 
         else:
             if end_angle == 0:
@@ -232,8 +250,8 @@ class Player(pygame.sprite.Sprite):
     def blit(self, surface):
         surface.blit(self.image, (self.x - int(self.image.get_width() / 2), self.y - int(self.image.get_height() / 2)))
         surface.blit(self.turret, (self.x - int(self.turret.get_width() / 2), self.y - int(self.turret.get_height() / 2)))
-        # pygame.draw.rect(surface, (255, 0, 0), self.rect)
-        # pygame.draw.circle(surface, "Pink", (self.x, self.y), 3)
+        #pygame.draw.rect(surface, (255, 0, 0), self.rect)
+        #pygame.draw.circle(surface, "Pink", (self.x, self.y), 3)
 
     def blit_bullets(self, surface):
         for b in self.bullets:
