@@ -26,7 +26,7 @@ class Player(pygame.sprite.Sprite):
         self.turret_angle = 0
         self.speed = .2
         self.turn_speed = .2
-        self.tolerance = 25
+        self.tolerance = 30
         self.shot_speed = 1000
         self.shoot_cooldown = self.shot_speed
         self.keyboard = True
@@ -142,14 +142,26 @@ class Player(pygame.sprite.Sprite):
                 self.image = pygame.transform.rotate(self.sprites[self.left_tread][self.right_tread], int(self.angle))
             self.move_player(time_passed, 1)
         elif ((self.angle + 180) % 360) - abs(end_angle % 360) < self.tolerance and ((self.angle + 180) % 360) - abs(end_angle % 360) > 0:
-            print('trigger')
-            self.angle += self.turn_speed * time_passed
-            if (self.angle + 180) % 360 > end_angle and abs(self.angle - end_angle) > 0 :
+            print('tick')
+            self.angle -= self.turn_speed * time_passed
+            self.image = pygame.transform.rotate(self.sprites[self.left_tread][self.right_tread], int(self.angle))
+            if self.animation_cooldown == 0:
+                self.decrease_left_tread()
+                self.increase_right_tread()
+            print(self.angle)
+            if (self.angle + 180) % 360 < end_angle and abs(self.angle - end_angle) > 0 :
+                print('snap')
                 self.angle = end_angle - 180
         elif abs(end_angle % 360) - (self.angle + 180) % 360 < self.tolerance and abs(end_angle % 360) - (self.angle + 180) % 360 > 0:
-            print('trigger')
-            self.angle -= self.turn_speed * time_passed
-            if (self.angle + 180) % 360 < end_angle and abs(self.angle - end_angle) > 0:
+            print('tick')
+            self.angle += self.turn_speed * time_passed
+            self.image = pygame.transform.rotate(self.sprites[self.left_tread][self.right_tread], int(self.angle))
+            if self.animation_cooldown == 0:
+                self.increase_left_tread()
+                self.decrease_right_tread()
+            print(self.angle)
+            if (self.angle + 180) % 360 > end_angle and abs(self.angle - end_angle) < 180:
+                print('snap')
                 self.angle = end_angle - 180
         elif (self.angle + 180) % 360 == abs(end_angle % 360):
             if self.animation_cooldown == 0:
