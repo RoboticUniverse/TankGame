@@ -7,11 +7,11 @@ from menu import *
 width = 1480
 height = 1000
 
-BACKGROUND = (82, 45, 5)
+BACKGROUND = (100, 100, 100)
 FPS = 60
 cap_frame_rate = False
 show_fps = True
-skip_menu = True
+skip_menu = False
 
 in_level = False
 mouse_clicked = False
@@ -36,7 +36,7 @@ if __name__ == '__main__':
     curr_fps = 0
 
     while True:
-        DISPLAYSURF.fill(BACKGROUND)
+
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
@@ -47,8 +47,10 @@ if __name__ == '__main__':
         time = timeClock.tick()
 
         if in_level:
+            DISPLAYSURF.fill((174, 140, 10))
             level.run(time)
         else:
+            DISPLAYSURF.fill(BACKGROUND)
             if menu.run(mouse_clicked):
                 level = Level(DISPLAYSURF, 1)
                 in_level = True

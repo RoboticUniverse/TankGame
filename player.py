@@ -243,6 +243,6 @@ class Player(pygame.sprite.Sprite):
         self.update_animation_buffer(time_passed)
         self.get_inputs(time_passed)
         self.check_wall_collisions(walls)
-        self.bullets.update(time_passed)
+        self.bullets.update(time_passed, walls)
         self.blit(surface)
         self.blit_bullets(surface)
