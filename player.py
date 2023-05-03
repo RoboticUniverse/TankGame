@@ -27,7 +27,7 @@ class Player(pygame.sprite.Sprite):
         self.speed = .2
         self.turn_speed = .2
         self.tolerance = 30
-        self.shot_speed = 1000
+        self.shot_speed = 100
         self.shoot_cooldown = self.shot_speed
         self.keyboard = True
         self.autoaim = False
@@ -122,7 +122,6 @@ class Player(pygame.sprite.Sprite):
             self.turret = pygame.transform.rotate(self.turret_image, int(self.turret_angle))
         self.shoot_cooldown += time_passed
         if keys[key_sets[self.player_number]["shoot"]] and self.shoot_cooldown >= self.shot_speed:
-            print("shoot")
             self.bullets.add(Bullet((self.x + math.cos(self.turret_angle * math.pi / 180) * 64, self.y + math.sin(self.turret_angle * math.pi / 180) * -64), (math.cos(self.turret_angle * math.pi / 180), math.sin(self.turret_angle * math.pi / 180) * -1)))
             self.shoot_cooldown = 0
 
