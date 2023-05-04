@@ -15,10 +15,10 @@ key_sets = [{'up': K_w, 'down': K_s, 'left': K_a, 'right': K_d, 'shoot': K_LSHIF
             {'up': K_t, 'down': K_g, 'left': K_f, 'right': K_h, 'shoot': K_c, 'ability': K_x},
             {'up': K_UP, 'down': K_DOWN, 'left': K_LEFT, 'right': K_RIGHT, 'shoot': K_RCTRL, 'ability': K_MENU},
             ]
-
+# change player 4 shoot to K_RCTRL OR K_KP0
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, pos, player_number):
+    def __init__(self, pos, player_number, aim):
         super().__init__()
 
         self.player_number = player_number
@@ -27,11 +27,11 @@ class Player(pygame.sprite.Sprite):
         self.speed = .2
         self.turn_speed = .2
         self.tolerance = 30
-        self.shot_speed = 100
+        self.shot_speed = 200
         self.shoot_cooldown = self.shot_speed
         self.keyboard = True
-        self.autoaim = False
-        self.autoturn = True
+        self.autoaim = aim
+        self.autoturn = not aim
 
         self.picture = pygame.image.load("sprites/Tank" + str(player_number) + ".png")
         self.sprites = [[], [], [], []]
@@ -111,6 +111,8 @@ class Player(pygame.sprite.Sprite):
                     self.move_player_combined(270, time_passed)
             elif keys[key_sets[self.player_number]["left"]]:
                 self.move_player_combined(180, time_passed)
+            if self.autoaim:
+                self.turret_angle = self.angle
 
         pos = pygame.mouse.get_pos()
         if self.autoaim:
@@ -121,7 +123,7 @@ class Player(pygame.sprite.Sprite):
             self.turret_angle = v1.angle_to(v2)
             self.turret = pygame.transform.rotate(self.turret_image, int(self.turret_angle))
         self.shoot_cooldown += time_passed
-        if keys[key_sets[self.player_number]["shoot"]] and self.shoot_cooldown >= self.shot_speed:
+        if keys[key_sets[self.player_number]["shoot"]] and self.shoot_cooldown >= self.shot_speed and len(self.bullets) < 5:
             self.bullets.add(Bullet((self.x + math.cos(self.turret_angle * math.pi / 180) * 64, self.y + math.sin(self.turret_angle * math.pi / 180) * -64), (math.cos(self.turret_angle * math.pi / 180), math.sin(self.turret_angle * math.pi / 180) * -1)))
             self.shoot_cooldown = 0
 
@@ -261,10 +263,10 @@ class Player(pygame.sprite.Sprite):
         for b in self.bullets:
             surface.blit(b.image, (b.x - int(b.image.get_width() / 2), b.y - int(b.image.get_width() / 2)))
 
-    def update(self, time_passed, walls, surface):
+    def update(self, time_passed, walls, surface, players):
         self.update_animation_buffer(time_passed)
         self.get_inputs(time_passed)
         self.check_wall_collisions(walls)
-        self.bullets.update(time_passed, walls)
+        self.bullets.update(time_passed, walls, players)
         self.blit(surface)
         self.blit_bullets(surface)

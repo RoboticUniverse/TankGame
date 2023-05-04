@@ -22,7 +22,10 @@ class Level:
                     elif room.get_at((w, h)) == (255, 255, 0, 255):
                         self.walls.add(Wall((w * 40 + 20, h * 40 + 20), 40, True))
                     elif room.get_at((w, h)) == (0, 0, 255, 255):
-                        self.players.add(Player((w * 40 + 20 + 16, h * 40 + 20 + 16), player_number))
+                        if player_number == 3:
+                            self.players.add(Player((w * 40 + 20 + 16, h * 40 + 20 + 16), player_number, False))
+                        else:
+                            self.players.add(Player((w * 40 + 20 + 16, h * 40 + 20 + 16), player_number, True))
                         player_number += 1
                     # elif room.get_at((w, h)) == (0, 255, 0, 255):
                     #     enemies.append((w, h))
@@ -34,5 +37,5 @@ class Level:
 
     def run(self, time_passed):
         self.walls.draw(self.surface)
-        self.players.update(time_passed, self.walls, self.surface)
+        self.players.update(time_passed, self.walls, self.surface, self.players)
 

@@ -20,7 +20,6 @@ class Bullet(pygame.sprite.Sprite):
         if self.collided < 0:
             for sprite in walls.sprites():
                 if sprite.rect.colliderect(self.rect):
-                    print("hit x")
                     if self.dx > 0:
                         self.rect.right = sprite.rect.left
                     else:
@@ -33,7 +32,6 @@ class Bullet(pygame.sprite.Sprite):
                     break
         else:
             self.collided -= time_passed
-
 
     def move_y(self, time_passed, walls):
         self.y += self.dy * time_passed * self.bullet_speed
@@ -54,6 +52,16 @@ class Bullet(pygame.sprite.Sprite):
         else:
             self.collided -= time_passed
 
-    def update(self, time_passed, walls):
+    def player_collisions(self, players):
+        for sprite in players.sprites():
+            if sprite.rect.colliderect(self.rect):
+                sprite.kill()
+                self.kill()
+                print("boom")
+            # for sprite in players.bullets.sprite.rect
+
+
+    def update(self, time_passed, walls, players):
         self.move_x(time_passed, walls)
         self.move_y(time_passed, walls)
+        self.player_collisions(players)
