@@ -53,12 +53,14 @@ class Bullet(pygame.sprite.Sprite):
             self.collided -= time_passed
 
     def player_collisions(self, players):
-        for sprite in players.sprites():
+        for sprite in players:
             if sprite.rect.colliderect(self.rect):
                 sprite.kill()
                 self.kill()
-                print("boom")
-            # for sprite in players.bullets.sprite.rect
+            for bullet in sprite.bullets.sprites():
+                if bullet.rect.colliderect(self.rect) and not(bullet is self):
+                    bullet.kill()
+                    self.kill()
 
 
     def update(self, time_passed, walls, players):
