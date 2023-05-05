@@ -55,7 +55,7 @@ class Bullet(pygame.sprite.Sprite):
     def player_collisions(self, players):
         for sprite in players:
             if sprite.rect.colliderect(self.rect):
-                sprite.kill()
+                sprite.die()
                 self.kill()
             for bullet in sprite.bullets.sprites():
                 if bullet.rect.colliderect(self.rect) and not(bullet is self):

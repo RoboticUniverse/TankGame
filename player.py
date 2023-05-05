@@ -37,8 +37,9 @@ class Player(pygame.sprite.Sprite):
         self.keyboard = True
         self.autoaim = aim
         self.autoturn = not aim
+        self.dead = False
 
-        self.picture = pygame.image.load("sprites/Tank" + str(player_number) + ".png")
+        self.picture = pygame.image.load("sprites/Tank" + str(player_number) + ".png").convert_alpha()
         self.sprites = [[], [], [], []]
         for row in range(4):
             for col in range(4):
@@ -56,8 +57,8 @@ class Player(pygame.sprite.Sprite):
         self.x = self.rect.centerx
         self.y = self.rect.centery
 
-        self.turret_image = pygame.image.load("sprites/Turret0.png")
-        self.turret = pygame.transform.rotate(self.turret_image, int(self.turret_angle))
+        self.turret_image = pygame.image.load("sprites/Turret0.png").convert_alpha()
+        self.turret = pygame.transform.rotate(self.turret_image, int(self.turret_angle)).convert_alpha()
         self.bullets = pygame.sprite.Group()
 
     def update_animation_buffer(self, time_passed):
@@ -267,10 +268,18 @@ class Player(pygame.sprite.Sprite):
         for b in self.bullets:
             surface.blit(b.image, (b.x - int(b.image.get_width() / 2), b.y - int(b.image.get_width() / 2)))
 
+    def die(self):
+        self.dead = True
+        self.x = -200
+        self.y = -200
+        self.rect.x = self.x - self.rect.width / 2
+        self.rect.y = self.y - self.rect.width / 2
+
     def update(self, time_passed, walls, surface, players):
-        self.update_animation_buffer(time_passed)
-        self.get_inputs(time_passed)
-        self.check_wall_collisions(walls)
+        if not self.dead:
+            self.update_animation_buffer(time_passed)
+            self.get_inputs(time_passed)
+            self.check_wall_collisions(walls)
+            self.blit(surface)
         self.bullets.update(time_passed, walls, players)
-        self.blit(surface)
         self.blit_bullets(surface)
