@@ -1,6 +1,7 @@
 import pygame
 from wall import Wall
 from player import *
+from enemy import *
 
 
 class Level:
@@ -23,7 +24,7 @@ class Level:
                         self.walls.add(Wall((w * 40 + 20, h * 40 + 20), 40, True))
                     elif room.get_at((w, h)) == (0, 0, 255, 255):
                         if player_number == 3:
-                            self.players.add(Player((w * 40 + 20 + 16, h * 40 + 20 + 16), player_number, False))
+                            self.players.add(Player((w * 40 + 20 + 16, h * 40 + 20 + 16), player_number, True))
                         else:
                             self.players.add(Player((w * 40 + 20 + 16, h * 40 + 20 + 16), player_number, True))
                         player_number += 1

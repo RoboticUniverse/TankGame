@@ -61,6 +61,12 @@ class Player(pygame.sprite.Sprite):
         self.turret = pygame.transform.rotate(self.turret_image, int(self.turret_angle)).convert_alpha()
         self.bullets = pygame.sprite.Group()
 
+    def get_X(self):
+        return self.x
+    def get_Y(self):
+        return self.y
+
+
     def update_animation_buffer(self, time_passed):
         self.animation_cooldown += time_passed
         if self.animation_cooldown > self.animation_speed:
