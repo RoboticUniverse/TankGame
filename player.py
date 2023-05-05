@@ -2,6 +2,7 @@ import pygame, math
 
 from pygame.locals import *
 from bullet import *
+from main import width, height
 
 up_kb = [K_w, K_UP]
 down_kb = [K_s, K_DOWN]
@@ -22,8 +23,12 @@ class Player(pygame.sprite.Sprite):
         super().__init__()
 
         self.player_number = player_number
-        self.angle = 0
-        self.turret_angle = 0
+        vec1 = pygame.math.Vector2(width/2, height/2)
+        vec1 -= pos
+        vec1.y = - vec1.y
+        vec = vec1.as_polar()
+        self.angle = vec[1]
+        self.turret_angle = self.angle
         self.speed = .2
         self.turn_speed = .2
         self.tolerance = 30
@@ -43,7 +48,7 @@ class Player(pygame.sprite.Sprite):
         self.animation_speed = 50
         self.animation_cooldown = self.animation_speed
 
-        self.image = self.sprites[self.right_tread][self.left_tread]
+        self.image = pygame.transform.rotate(self.sprites[self.left_tread][self.right_tread], int(self.angle))
         self.rect = self.image.get_rect(center=pos)
         self.hitbox_addition = 0
         self.rect.width += self.hitbox_addition
@@ -51,8 +56,8 @@ class Player(pygame.sprite.Sprite):
         self.x = self.rect.centerx
         self.y = self.rect.centery
 
-        self.turret = pygame.image.load("sprites/Turret0.png")
         self.turret_image = pygame.image.load("sprites/Turret0.png")
+        self.turret = pygame.transform.rotate(self.turret_image, int(self.turret_angle))
         self.bullets = pygame.sprite.Group()
 
     def update_animation_buffer(self, time_passed):
@@ -226,7 +231,6 @@ class Player(pygame.sprite.Sprite):
         self.right_tread -= 1
         if self.right_tread < 0:
             self.right_tread = 3
-
 
     def check_wall_collisions(self, walls):
         for sprite in walls.sprites():
