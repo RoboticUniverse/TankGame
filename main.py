@@ -25,7 +25,7 @@ if __name__ == '__main__':
     pygame.display.set_caption('tank game')
     font = pygame.font.Font("freesansbold.ttf", 30)
 
-    newgrounds = pygame.image.load("sprites/newgrounds.png").convert_alpha()
+    newgrounds = pygame.image.load("sprites/newground.png").convert_alpha()
     newgrounds = pygame.transform.scale(newgrounds, (width, height))
 
     level = Level(DISPLAYSURF, 1)

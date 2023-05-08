@@ -33,6 +33,12 @@ class Button:
     def set_x(self, x_val):
         self.rect.x = x_val
 
+    def change_color(self):
+        if self.b_c == (0, 255, 0):
+            self.b_c = (255, 0, 0)
+        else:
+            self.b_c = (0, 255, 0)
+
     def press(self, p):
         self.pr = p
 
@@ -64,7 +70,7 @@ class Menu:
         self.setting_buttons = []
         self.setting_buttons.append(Button(Rect(self.surface.get_width() / 2 - 200, self.surface.get_height() / 4 - 50, 400, 100), "Settings", -1, (0, 0, 0), (0, 255, 0)))
         self.setting_buttons[0].set_x(self.surface.get_width() / 2 - self.setting_buttons[0].get_width() / 2)
-        self.setting_buttons.append(Button(Rect(self.surface.get_width() / 2 - 50, self.surface.get_height() / 2 - 100, 100, 50), "Controls", -1, (0, 0, 0), (255, 255, 255)))
+        self.setting_buttons.append(Button(Rect(self.surface.get_width() / 2 - 50, self.surface.get_height() / 2 - 100, 100, 50), "Controls", 4, (0, 0, 0), (255, 255, 255)))
         self.setting_buttons[1].set_text_size(45)
         self.setting_buttons[1].set_x(self.surface.get_width() / 2 - self.setting_buttons[1].get_width() / 2)
         self.setting_buttons.append(Button(Rect(self.surface.get_width() / 2 - 50, self.surface.get_height() / 2 - 25, 100, 50), "Other", -1, (0, 0, 0), (255, 255, 255)))
@@ -73,23 +79,54 @@ class Menu:
         self.setting_buttons.append(Button(Rect(self.surface.get_width() / 2 - 50, self.surface.get_height() / 2 + 50, 100, 50), "Back", 3, (0, 0, 0), (255, 255, 255)))
         self.setting_buttons[3].set_text_size(45)
         self.setting_buttons[3].set_x(self.surface.get_width() / 2 - self.setting_buttons[3].get_width() / 2)
+        self.control_buttons = []
+        self.control_buttons.append(Button(Rect(self.surface.get_width() / 2 - 200, self.surface.get_height() / 4 - 50, 400, 100), "Control Settings", -1, (0, 0, 0), (0, 255, 0)))
+        self.control_buttons[0].set_x(self.surface.get_width() / 2 - self.control_buttons[0].get_width() / 2)
+        self.control_buttons.append(Button(Rect(self.surface.get_width() / 2 - 50, self.surface.get_height() / 2 - 100, 100, 50), "Player 1", -1, (0, 0, 0), (255, 255, 255)))
+        self.control_buttons[1].set_text_size(45)
+        self.control_buttons[1].set_x(self.surface.get_width() / 5 - self.control_buttons[1].get_width() / 2)
+        self.control_buttons.append(Button(Rect(self.surface.get_width() / 2 - 50, self.surface.get_height() / 2 - 25, 100, 50), "cope", 12, (255, 0, 0), (255, 255, 255)))
+        self.control_buttons[2].set_text_size(45)
+        self.control_buttons[2].set_x(self.surface.get_width() / 5 - self.control_buttons[2].get_width() / 2)
+        self.control_buttons.append(Button(Rect(self.surface.get_width() / 2 - 50, self.surface.get_height() / 2 - 100, 100, 50), "Player 2", -1, (0, 0, 0), (255, 255, 255)))
+        self.control_buttons[3].set_text_size(45)
+        self.control_buttons[3].set_x(self.surface.get_width() / 5 * 2 - self.control_buttons[3].get_width() / 2)
+        self.control_buttons.append(Button(Rect(self.surface.get_width() / 2 - 50, self.surface.get_height() / 2 - 25, 100, 50), "cope", 14, (255, 0, 0), (255, 255, 255)))
+        self.control_buttons[4].set_text_size(45)
+        self.control_buttons[4].set_x(self.surface.get_width() / 5 * 2 - self.control_buttons[4].get_width() / 2)
+        self.control_buttons.append(Button(Rect(self.surface.get_width() / 2 - 50, self.surface.get_height() / 2 - 100, 100, 50), "Player 3", -1, (0, 0, 0), (255, 255, 255)))
+        self.control_buttons[5].set_text_size(45)
+        self.control_buttons[5].set_x(self.surface.get_width() / 5 * 3 - self.control_buttons[5].get_width() / 2)
+        self.control_buttons.append(Button(Rect(self.surface.get_width() / 2 - 50, self.surface.get_height() / 2 - 25, 100, 50), "cope", 16, (255, 0, 0), (255, 255, 255)))
+        self.control_buttons[6].set_text_size(45)
+        self.control_buttons[6].set_x(self.surface.get_width() / 5 * 3 - self.control_buttons[6].get_width() / 2)
+        self.control_buttons.append(Button(Rect(self.surface.get_width() / 2 - 50, self.surface.get_height() / 2 - 100, 100, 50), "Player 4", -1, (0, 0, 0), (255, 255, 255)))
+        self.control_buttons[7].set_text_size(45)
+        self.control_buttons[7].set_x(self.surface.get_width() / 5 * 4 - self.control_buttons[7].get_width() / 2)
+        self.control_buttons.append(Button(Rect(self.surface.get_width() / 2 - 50, self.surface.get_height() / 2 - 25, 100, 50), "cope", 18, (255, 0, 0), (255, 255, 255)))
+        self.control_buttons[8].set_text_size(45)
+        self.control_buttons[8].set_x(self.surface.get_width() / 5 * 4 - self.control_buttons[8].get_width() / 2)
+        self.control_buttons.append(Button(Rect(self.surface.get_width() / 2 - 50, self.surface.get_height() / 2 + 50, 100, 50), "Back", 1, (0, 0, 0), (255, 255, 255)))
+        self.control_buttons[9].set_text_size(45)
+        self.control_buttons[9].set_x(self.surface.get_width() / 2 - self.control_buttons[9].get_width() / 2)
         self.print_buttons = self.menu_buttons
         self.mouse_down = False
         self.close_menu = False
-        self.setting = False
 
     def action(self, num):
         if num == 0:
             self.close_menu = True
         elif num == 1:
-            self.setting = True
             self.print_buttons = self.setting_buttons
         elif num == 2:
             pygame.quit()
             sys.exit()
         elif num == 3:
-            self.setting = False
             self.print_buttons = self.menu_buttons
+        elif num == 4:
+            self.print_buttons = self.control_buttons
+        elif num > 10:
+            self.control_buttons[num - 10].change_color()
         return False
 
     def run(self, mouse_clicked):
