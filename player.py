@@ -36,7 +36,7 @@ class Player(pygame.sprite.Sprite):
         self.shoot_cooldown = self.shot_speed
         self.keyboard = True
         self.autoaim = aim
-        self.autoturn = not aim
+        self.autoturn = aim
         self.dead = False
 
         self.picture = pygame.image.load("sprites/Tank" + str(player_number) + ".png").convert_alpha()
@@ -62,9 +62,9 @@ class Player(pygame.sprite.Sprite):
         self.bullets = pygame.sprite.Group()
 
     def get_X(self):
-        return self.x
+        return self.rect.x
     def get_Y(self):
-        return self.y
+        return self.rect.y
 
 
     def update_animation_buffer(self, time_passed):
