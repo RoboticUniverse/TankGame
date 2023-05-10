@@ -25,13 +25,14 @@ if __name__ == '__main__':
     pygame.display.set_caption('tank game')
     font = pygame.font.Font("freesansbold.ttf", 30)
 
-    newgrounds = pygame.image.load("sprites/newgrounds.png").convert_alpha()
+    newgrounds = pygame.image.load("sprites/newground.png").convert_alpha()
     newgrounds = pygame.transform.scale(newgrounds, (width, height))
 
     level = Level(DISPLAYSURF, 1)
     menu = Menu(DISPLAYSURF)
     if skip_menu:
         in_level = True
+    run_menu = []
 
     time = 0
     fps_time = 0
@@ -48,7 +49,7 @@ if __name__ == '__main__':
                 mouse_clicked = pygame.mouse.get_pressed()[0]
             if event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
-                    level = Level(DISPLAYSURF, 1)
+                    level = Level(DISPLAYSURF, 1, run_menu)
 
         time = timeClock.tick()
 
@@ -57,9 +58,10 @@ if __name__ == '__main__':
             level.run(time)
         else:
             DISPLAYSURF.fill(BACKGROUND)
-            DISPLAYSURF.blit(newgrounds, (0, 0))
-            if menu.run(mouse_clicked):
-                level = Level(DISPLAYSURF, 1)
+            # DISPLAYSURF.blit(newgrounds, (0, 0))
+            run_menu = menu.run(mouse_clicked)
+            if run_menu[0]:
+                level = Level(DISPLAYSURF, 1, run_menu)
                 in_level = True
 
         # pygame.draw.circle(DISPLAYSURF, (255, 0, 0), (100, 100), 2.5)

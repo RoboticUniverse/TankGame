@@ -9,8 +9,6 @@ down_kb = [K_s, K_DOWN]
 left_kb = [K_a, K_LEFT]
 right_kb = [K_d, K_RIGHT]
 
-
-
 key_sets = [{'up': K_w, 'down': K_s, 'left': K_a, 'right': K_d, 'shoot': K_LSHIFT, 'ability': K_LCTRL},
             {'up': K_p, 'down': K_SEMICOLON, 'left': K_l, 'right': K_QUOTE, 'shoot': K_COMMA, 'ability': K_m},
             {'up': K_t, 'down': K_g, 'left': K_f, 'right': K_h, 'shoot': K_c, 'ability': K_x},
@@ -18,8 +16,9 @@ key_sets = [{'up': K_w, 'down': K_s, 'left': K_a, 'right': K_d, 'shoot': K_LSHIF
             ]
 # change player 4 shoot to K_RCTRL OR K_KP0
 
+
 class Player(pygame.sprite.Sprite):
-    def __init__(self, pos, player_number, aim):
+    def __init__(self, pos, player_number, mouse=True, turn=False, tol=20, col=0):
         super().__init__()
 
         self.player_number = player_number
@@ -31,15 +30,16 @@ class Player(pygame.sprite.Sprite):
         self.turret_angle = self.angle
         self.speed = .2
         self.turn_speed = .2
-        self.tolerance = 30
+        self.tolerance = tol
         self.shot_speed = 200
         self.shoot_cooldown = self.shot_speed
         self.keyboard = True
-        self.autoaim = aim
-        self.autoturn = aim
+        self.autoaim = not mouse
+        self.autoturn = turn
         self.dead = False
 
-        self.picture = pygame.image.load("sprites/Tank" + str(player_number) + ".png").convert_alpha()
+        # self.picture = pygame.image.load("sprites/Tank" + str(player_number) + ".png").convert_alpha()
+        self.picture = pygame.image.load("sprites/Tank" + str(col) + ".png").convert_alpha()
         self.sprites = [[], [], [], []]
         for row in range(4):
             for col in range(4):
@@ -61,10 +61,11 @@ class Player(pygame.sprite.Sprite):
         self.turret = pygame.transform.rotate(self.turret_image, int(self.turret_angle)).convert_alpha()
         self.bullets = pygame.sprite.Group()
 
-    def get_X(self):
-        return self.rect.x
-    def get_Y(self):
-        return self.rect.y
+    def get_x(self):
+        return self.x
+
+    def get_y(self):
+        return self.y
 
 
     def update_animation_buffer(self, time_passed):
