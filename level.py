@@ -5,11 +5,14 @@ from enemy import *
 
 
 class Level:
-    def __init__(self, display_surface, level_number=1):
+    def __init__(self, display_surface, level_number=1, settings=None):
+        if settings is None:
+            settings = [True, False, False, False, False, False, False, False, False, 20, 20, 20, 20, 0, 1, 2, 3]
         self.surface = display_surface
         self.level_number = level_number
         self.walls = pygame.sprite.Group()
         self.players = pygame.sprite.Group()
+        self.settings = settings
         self.create_outline()
 
     def create_outline(self):
@@ -23,10 +26,7 @@ class Level:
                     elif room.get_at((w, h)) == (255, 255, 0, 255):
                         self.walls.add(Wall((w * 40 + 20, h * 40 + 20), 40, True))
                     elif room.get_at((w, h)) == (0, 0, 255, 255):
-                        if player_number == 3:
-                            self.players.add(Player((w * 40 + 20 + 16, h * 40 + 20 + 16), player_number, True))
-                        else:
-                            self.players.add(Player((w * 40 + 20 + 16, h * 40 + 20 + 16), player_number, True))
+                        self.players.add(Player((w * 40 + 20 + 16, h * 40 + 20 + 16), player_number, self.settings[1 + player_number], self.settings[5 + player_number], self.settings[9 + player_number], self.settings[13 + player_number]))
                         player_number += 1
                     # elif room.get_at((w, h)) == (0, 255, 0, 255):
                     #     enemies.append((w, h))
