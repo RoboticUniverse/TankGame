@@ -21,7 +21,10 @@ class Button:
         if not self.no_back:
             pygame.draw.rect(screen, self.b_c, self.rect, 0, 3)
         if len(str(self.text)) > 0:
-            butt_font = pygame.font.SysFont("lucidasans.ttf", int(self.rect.width / len(str(self.text)) * 2))
+            if self.text == "0" or self.text == "5":
+                butt_font = pygame.font.SysFont("lucidasans.ttf", int(self.rect.width))
+            else:
+                butt_font = pygame.font.SysFont("lucidasans.ttf", int(self.rect.width / len(str(self.text)) * 2))
             butt_text = butt_font.render(self.text, True, self.t_c)
             screen.blit(butt_text, (self.rect.x + (self.rect.width - butt_text.get_width()) / 2, self.rect.y + (self.rect.height - butt_text.get_height()) / 2))
 
@@ -138,6 +141,7 @@ class Menu:
                 n += 11
             if (int(self.control_buttons[n].get_text()) > 0 or change > 0) and (int(self.control_buttons[n].get_text()) < 45 or change < 0) and self.control_buttons[n].get_text_color() == (255, 255, 255):
                 self.control_buttons[n].change_text(str(int(self.control_buttons[n].get_text()) + change))
+                # self.control_buttons[n].set_text_size(45)
         elif 21 <= num <= 28:
             n = 10
             nu = 21
