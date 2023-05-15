@@ -18,7 +18,7 @@ key_sets = [{'up': K_w, 'down': K_s, 'left': K_a, 'right': K_d, 'shoot': K_LSHIF
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, pos, player_number, mouse=True, turn=False, tol=20, col=0):
+    def __init__(self, pos, player_number, mouse=False, turn=False, tol=20, col=0):
         super().__init__()
 
         self.player_number = player_number
@@ -35,6 +35,8 @@ class Player(pygame.sprite.Sprite):
         self.shoot_cooldown = self.shot_speed
         self.keyboard = True
         self.autoaim = not mouse
+        if mouse:
+            key_sets[self.player_number]["shoot"] = "mouse"
         self.autoturn = turn
         self.dead = False
 
@@ -135,7 +137,11 @@ class Player(pygame.sprite.Sprite):
             self.turret_angle = v1.angle_to(v2)
             self.turret = pygame.transform.rotate(self.turret_image, int(self.turret_angle))
         self.shoot_cooldown += time_passed
-        if keys[key_sets[self.player_number]["shoot"]] and self.shoot_cooldown >= self.shot_speed and len(self.bullets) < 5:
+        if key_sets[self.player_number]["shoot"] == "mouse":
+            if pygame.mouse.get_pressed()[0] and self.shoot_cooldown >= self.shot_speed and len(self.bullets) < 5:
+                self.bullets.add(Bullet((self.x + math.cos(self.turret_angle * math.pi / 180) * 64, self.y + math.sin(self.turret_angle * math.pi / 180) * -64), (math.cos(self.turret_angle * math.pi / 180), math.sin(self.turret_angle * math.pi / 180) * -1)))
+                self.shoot_cooldown = 0
+        elif keys[key_sets[self.player_number]["shoot"]] and self.shoot_cooldown >= self.shot_speed and len(self.bullets) < 5:
             self.bullets.add(Bullet((self.x + math.cos(self.turret_angle * math.pi / 180) * 64, self.y + math.sin(self.turret_angle * math.pi / 180) * -64), (math.cos(self.turret_angle * math.pi / 180), math.sin(self.turret_angle * math.pi / 180) * -1)))
             self.shoot_cooldown = 0
 

@@ -10,7 +10,7 @@ height = 1000
 BACKGROUND = (100, 100, 100)
 FPS = 60
 cap_frame_rate = False
-show_fps = True
+show_fps = False
 skip_menu = False
 
 in_level = False
@@ -63,6 +63,14 @@ if __name__ == '__main__':
             if run_menu[0]:
                 level = Level(DISPLAYSURF, 1, run_menu)
                 in_level = True
+            else:
+                show_fps = False
+                if run_menu[1]:
+                    show_fps = True
+                cap_frame_rate = False
+                if run_menu[2] > 0:
+                    cap_frame_rate = True
+                    FPS = run_menu[2]
 
         # pygame.draw.circle(DISPLAYSURF, (255, 0, 0), (100, 100), 2.5)
 
