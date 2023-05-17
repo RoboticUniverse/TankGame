@@ -22,12 +22,13 @@ class Mine(pygame.sprite.Sprite):
     def collisions(self, players):
         for sprite in players:
             dis = ((self.rect.centerx - sprite.rect.centerx)**2 + (self.rect.centery - sprite.rect.centery)**2)**.5
-            if dis < 20:
+            if dis < 40:
                 self.explode(players)
             for bullet in sprite.bullets.sprites():
                 diss = ((self.rect.centerx - bullet.rect.centerx)**2 + (self.rect.centery - bullet.rect.centery)**2)**.5
-                if dis < 10:
+                if diss < 10:
                     self.explode(players)
+                    bullet.kill()
 
     def explode(self, players):
         self.exploded = True
@@ -43,13 +44,13 @@ class Mine(pygame.sprite.Sprite):
     def update(self, time_passed, players):
         self.life_timer += time_passed
         if not self.exploded:
-            if self.life_timer < 700:
+            if self.life_timer < 1000:
                 pass
-            elif self.life_timer < 3000:
+            elif self.life_timer < 23000:
                 self.image = self.sprites[1]
                 self.collisions(players)
-            elif self.life_timer < 4000:
-                if (self.life_timer % 160) < 80:
+            elif self.life_timer < 26000:
+                if (self.life_timer % 300) < 150:
                     self.image = self.sprites[2]
                 else:
                     self.image = self.sprites[1]
