@@ -2,7 +2,7 @@ import pygame, math
 
 from pygame.locals import *
 from bullet import *
-from main import width, height
+from main import width, height, volume
 
 up_kb = [K_w, K_UP]
 down_kb = [K_s, K_DOWN]
@@ -62,6 +62,12 @@ class Player(pygame.sprite.Sprite):
         self.turret_image = pygame.image.load("sprites/Turret0.png").convert_alpha()
         self.turret = pygame.transform.rotate(self.turret_image, int(self.turret_angle)).convert_alpha()
         self.bullets = pygame.sprite.Group()
+
+        sound_shoot = pygame.mixer.Sound("sprites/shoot.mp3")
+        sound_death = pygame.mixer.Sound("sprites/death2.mp3")
+        self.sounds = [sound_shoot, sound_death]
+        for s in self.sounds:
+            s.set_volume(volume)
 
     def get_x(self):
         return self.x
@@ -142,9 +148,11 @@ class Player(pygame.sprite.Sprite):
             if pygame.mouse.get_pressed()[0] and self.shoot_cooldown >= self.shot_speed and len(self.bullets) < 5:
                 self.bullets.add(Bullet((self.x + math.cos(self.turret_angle * math.pi / 180) * 64, self.y + math.sin(self.turret_angle * math.pi / 180) * -64), (math.cos(self.turret_angle * math.pi / 180), math.sin(self.turret_angle * math.pi / 180) * -1)))
                 self.shoot_cooldown = 0
+                self.sounds[0].play()
         elif keys[key_sets[self.player_number]["shoot"]] and self.shoot_cooldown >= self.shot_speed and len(self.bullets) < 5:
             self.bullets.add(Bullet((self.x + math.cos(self.turret_angle * math.pi / 180) * 64, self.y + math.sin(self.turret_angle * math.pi / 180) * -64), (math.cos(self.turret_angle * math.pi / 180), math.sin(self.turret_angle * math.pi / 180) * -1)))
             self.shoot_cooldown = 0
+            self.sounds[0].play()
 
     def move_player_combined(self, direction, time_passed):
         # reset the angle to between 0 and 360
@@ -287,6 +295,7 @@ class Player(pygame.sprite.Sprite):
         self.y = -200
         self.rect.x = self.x - self.rect.width / 2
         self.rect.y = self.y - self.rect.width / 2
+        self.sounds[1].play()
 
     def update(self, time_passed, walls, surface, players):
         if not self.dead:
