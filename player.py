@@ -19,7 +19,7 @@ key_sets = [{'up': K_w, 'down': K_s, 'left': K_a, 'right': K_d, 'shoot': K_LSHIF
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, pos, player_number, mouse=False, turn=False, tol=20, col=0):
+    def __init__(self, pos, player_number, mouse=False, turn=False, tol=20, color=0):
         super().__init__()
 
         self.player_number = player_number
@@ -44,7 +44,7 @@ class Player(pygame.sprite.Sprite):
         self.dead = False
 
         # self.picture = pygame.image.load("sprites/Tank" + str(player_number) + ".png").convert_alpha()
-        self.picture = pygame.image.load("sprites/Tank" + str(col) + ".png").convert_alpha()
+        self.picture = pygame.image.load("sprites/Tank" + str(color) + ".png").convert_alpha()
         self.sprites = [[], [], [], []]
         for row in range(4):
             for col in range(4):
@@ -62,13 +62,13 @@ class Player(pygame.sprite.Sprite):
         self.x = self.rect.centerx
         self.y = self.rect.centery
 
-        self.turret_image = pygame.image.load("sprites/Turret0.png").convert_alpha()
+        self.turret_image = pygame.image.load("sprites/Turret" + str(color) + ".png").convert_alpha()
         self.turret = pygame.transform.rotate(self.turret_image, int(self.turret_angle)).convert_alpha()
         self.bullets = pygame.sprite.Group()
         self.mines = pygame.sprite.Group()
 
         sound_shoot = pygame.mixer.Sound("sprites/shoot.mp3")
-        sound_death = pygame.mixer.Sound("sprites/death2.mp3")
+        sound_death = pygame.mixer.Sound("sprites/death.mp3")
         self.sounds = [sound_shoot, sound_death]
         for s in self.sounds:
             s.set_volume(volume)
