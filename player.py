@@ -2,6 +2,7 @@ import pygame, math
 
 from pygame.locals import *
 from bullet import *
+from mine import *
 from main import width, height
 
 up_kb = [K_w, K_UP]
@@ -33,6 +34,8 @@ class Player(pygame.sprite.Sprite):
         self.tolerance = tol
         self.shot_speed = 200
         self.shoot_cooldown = self.shot_speed
+        self.mines_speed = 400
+        self.mines_cooldown = self.mines_speed
         self.keyboard = True
         self.autoaim = not mouse
         if mouse:
@@ -62,6 +65,7 @@ class Player(pygame.sprite.Sprite):
         self.turret_image = pygame.image.load("sprites/Turret0.png").convert_alpha()
         self.turret = pygame.transform.rotate(self.turret_image, int(self.turret_angle)).convert_alpha()
         self.bullets = pygame.sprite.Group()
+        self.mines = pygame.sprite.Group()
 
     def get_x(self):
         return self.x
@@ -137,6 +141,7 @@ class Player(pygame.sprite.Sprite):
             v2 = pygame.math.Vector2(pos[0] - self.x, self.y - pos[1])
             self.turret_angle = v1.angle_to(v2)
             self.turret = pygame.transform.rotate(self.turret_image, int(self.turret_angle))
+
         self.shoot_cooldown += time_passed
         if key_sets[self.player_number]["shoot"] == "mouse":
             if pygame.mouse.get_pressed()[0] and self.shoot_cooldown >= self.shot_speed and len(self.bullets) < 5:
@@ -145,6 +150,11 @@ class Player(pygame.sprite.Sprite):
         elif keys[key_sets[self.player_number]["shoot"]] and self.shoot_cooldown >= self.shot_speed and len(self.bullets) < 5:
             self.bullets.add(Bullet((self.x + math.cos(self.turret_angle * math.pi / 180) * 64, self.y + math.sin(self.turret_angle * math.pi / 180) * -64), (math.cos(self.turret_angle * math.pi / 180), math.sin(self.turret_angle * math.pi / 180) * -1)))
             self.shoot_cooldown = 0
+
+        self.mines_cooldown += time_passed
+        if keys[key_sets[self.player_number]["ability"]] and self.mines_cooldown >= self.mines_speed and len(self.mines) < 2:
+            self.mines.add(Mine(self.rect.center))
+            self.mines_cooldown = 0
 
     def move_player_combined(self, direction, time_passed):
         # reset the angle to between 0 and 360
@@ -280,6 +290,7 @@ class Player(pygame.sprite.Sprite):
     def blit_bullets(self, surface):
         for b in self.bullets:
             surface.blit(b.image, (b.x - int(b.image.get_width() / 2), b.y - int(b.image.get_width() / 2)))
+        self.mines.draw(surface)
 
     def die(self):
         self.dead = True
@@ -295,4 +306,5 @@ class Player(pygame.sprite.Sprite):
             self.check_wall_collisions(walls)
             self.blit(surface)
         self.bullets.update(time_passed, walls, players)
+        self.mines.update(time_passed, players)
         self.blit_bullets(surface)
