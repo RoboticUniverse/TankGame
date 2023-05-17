@@ -38,7 +38,7 @@ class Mine(pygame.sprite.Sprite):
         self.life_timer = 0
         for sprite in players:
             dis = ((self.rect.centerx - sprite.rect.centerx)**2 + (self.rect.centery - sprite.rect.centery)**2)**.5
-            if dis < 200:
+            if dis < 125:
                 sprite.die()
         for sprite in walls:
             dis = ((self.rect.centerx - sprite.rect.centerx)**2 + (self.rect.centery - sprite.rect.centery)**2)**.5
