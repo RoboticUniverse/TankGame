@@ -13,7 +13,7 @@ right_kb = [K_d, K_RIGHT]
 key_sets = [{'up': K_w, 'down': K_s, 'left': K_a, 'right': K_d, 'shoot': K_LSHIFT, 'ability': K_LCTRL},
             {'up': K_p, 'down': K_SEMICOLON, 'left': K_l, 'right': K_QUOTE, 'shoot': K_COMMA, 'ability': K_m},
             {'up': K_t, 'down': K_g, 'left': K_f, 'right': K_h, 'shoot': K_c, 'ability': K_x},
-            {'up': K_UP, 'down': K_DOWN, 'left': K_LEFT, 'right': K_RIGHT, 'shoot': K_RCTRL, 'ability': K_MENU},
+            {'up': K_UP, 'down': K_DOWN, 'left': K_LEFT, 'right': K_RIGHT, 'shoot': K_RCTRL, 'ability': K_KP0},
             ]
 # change player 4 shoot to K_RCTRL OR K_KP0
 
@@ -315,5 +315,5 @@ class Player(pygame.sprite.Sprite):
             self.check_wall_collisions(walls)
             self.blit(surface)
         self.bullets.update(time_passed, walls, players)
-        self.mines.update(time_passed, players)
+        self.mines.update(time_passed, players, walls)
         self.blit_bullets(surface)

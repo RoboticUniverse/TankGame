@@ -7,8 +7,12 @@ class Wall(pygame.sprite.Sprite):
         self.image = pygame.Surface((size, size))
         self.image.fill('Black')
         inside = pygame.Rect((1, 1), (39, 39))
-        pygame.draw.rect(self.image, (100,100,100), inside)
+        if is_breakable:
+            pygame.draw.rect(self.image, (100,100,100), inside)
+        else:
+            pygame.draw.rect(self.image, (80,80,80), inside)
         self.rect = self.image.get_rect(topleft=pos)
+        self.is_breakable = is_breakable
 
     def update(self):
         pass
