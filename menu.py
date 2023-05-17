@@ -202,6 +202,7 @@ class Menu:
             fps = -1
         volume = int(self.other_buttons[3].get_text())
         if not self.other_buttons[1].get_enabled():
+            print("bruh")
             volume = 0
         return [self.close_menu, self.other_buttons[5].get_enabled(), fps, volume]
 
@@ -417,16 +418,16 @@ class Menu:
         self.other_buttons = []
         self.other_buttons.append(Button(Rect(self.surface.get_width() / 2 - 200, self.surface.get_height() / 4 - 125, 400, 100), "Other Settings", -1, (0, 0, 0), (255, 255, 255)))
         self.other_buttons[-1].set_x(self.surface.get_width() / 2 - self.other_buttons[-1].get_width() / 2)
-        self.other_buttons.append(Button(Rect(self.surface.get_width() / 2 - 50, self.surface.get_height() / 2 - 175, 100, 50), "Volume", 30, (255, 0, 0), (255, 255, 255)))
+        self.other_buttons.append(Button(Rect(self.surface.get_width() / 2 - 50, self.surface.get_height() / 2 - 175, 100, 50), "Volume", 30, (0, 255, 0), (255, 255, 255), False, True))
         self.other_buttons[-1].set_text_size(45)
         self.other_buttons[-1].set_x(self.surface.get_width() / 2 - self.other_buttons[-1].get_width() / 2)
-        self.other_buttons.append(Button(Rect(self.surface.get_width() / 2 - 50, self.surface.get_height() / 2 - 100, 100, 50), "<", 33, (0, 0, 0), (150, 150, 150)))
+        self.other_buttons.append(Button(Rect(self.surface.get_width() / 2 - 50, self.surface.get_height() / 2 - 100, 100, 50), "<", 33, (0, 0, 0), (255, 255, 255)))
         self.other_buttons[-1].set_text_size(45)
         self.other_buttons[-1].set_x(self.surface.get_width() / 2 - self.other_buttons[-1].get_width() / 2 - 50)
-        self.other_buttons.append(Button(Rect(self.surface.get_width() / 2 - 50, self.surface.get_height() / 2 - 100, 100, 50), "100", -1, (0, 0, 0), (150, 150, 150)))
+        self.other_buttons.append(Button(Rect(self.surface.get_width() / 2 - 50, self.surface.get_height() / 2 - 100, 100, 50), "100", -1, (0, 0, 0), (255, 255, 255)))
         self.other_buttons[-1].set_text_size(45)
         self.other_buttons[-1].set_x(self.surface.get_width() / 2 - self.other_buttons[-1].get_width() / 2)
-        self.other_buttons.append(Button(Rect(self.surface.get_width() / 2 - 50, self.surface.get_height() / 2 - 100, 100, 50), ">", 34, (0, 0, 0), (150, 150, 150)))
+        self.other_buttons.append(Button(Rect(self.surface.get_width() / 2 - 50, self.surface.get_height() / 2 - 100, 100, 50), ">", 34, (0, 0, 0), (255, 255, 255)))
         self.other_buttons[-1].set_text_size(45)
         self.other_buttons[-1].set_x(self.surface.get_width() / 2 - self.other_buttons[-1].get_width() / 2 + 50)
         self.other_buttons.append(Button(Rect(self.surface.get_width() / 2 - 50, self.surface.get_height() / 2 - 25, 100, 50), "Show FPS", 31, (255, 0, 0), (255, 255, 255)))

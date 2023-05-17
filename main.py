@@ -12,6 +12,7 @@ FPS = 60
 cap_frame_rate = False
 show_fps = False
 skip_menu = False
+volume = 100
 
 in_level = False
 mouse_clicked = False
@@ -25,8 +26,10 @@ if __name__ == '__main__':
     pygame.display.set_caption('tank game')
     font = pygame.font.Font("freesansbold.ttf", 30)
 
-    # newgrounds = pygame.image.load("sprites/newground.png").convert_alpha()
-    # newgrounds = pygame.transform.scale(newgrounds, (width, height))
+    pygame.mixer.music.set_volume(1)
+    pygame.mixer.music.stop()
+    pygame.mixer.music.load("sprites/menu.mp3")
+    pygame.mixer.music.play(-1, 0.0)
 
     level = Level(DISPLAYSURF, 1)
     menu = Menu(DISPLAYSURF)
@@ -58,11 +61,13 @@ if __name__ == '__main__':
             level.run(time)
         else:
             DISPLAYSURF.fill(BACKGROUND)
-            # DISPLAYSURF.blit(newgrounds, (0, 0))
             run_menu = menu.run(mouse_clicked)
             if run_menu[0]:
                 level = Level(DISPLAYSURF, 1, run_menu)
                 in_level = True
+                pygame.mixer.music.stop()
+                pygame.mixer.music.load("sprites/music.mp3")
+                pygame.mixer.music.play(-1, 0.0)
             else:
                 show_fps = False
                 if run_menu[1]:
@@ -71,6 +76,9 @@ if __name__ == '__main__':
                 if run_menu[2] > 0:
                     cap_frame_rate = True
                     FPS = run_menu[2]
+                if volume != run_menu[3]:
+                    pygame.mixer.music.set_volume(run_menu[3]/100)
+                    volume = run_menu[3]
 
         # pygame.draw.circle(DISPLAYSURF, (255, 0, 0), (100, 100), 2.5)
 
