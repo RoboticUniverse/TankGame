@@ -26,7 +26,7 @@ if __name__ == '__main__':
     pygame.display.set_caption('tank game')
     font = pygame.font.Font("freesansbold.ttf", 30)
 
-    pygame.mixer.music.set_volume(1)
+    pygame.mixer.music.set_volume(.75)
     pygame.mixer.music.stop()
     pygame.mixer.music.load("sprites/menu.mp3")
     pygame.mixer.music.play(-1, 0.0)
@@ -77,7 +77,7 @@ if __name__ == '__main__':
                     cap_frame_rate = True
                     FPS = run_menu[2]
                 if volume != run_menu[3]:
-                    pygame.mixer.music.set_volume(run_menu[3]/100)
+                    pygame.mixer.music.set_volume(run_menu[3]/100*.75)
                     volume = run_menu[3]
 
         # pygame.draw.circle(DISPLAYSURF, (255, 0, 0), (100, 100), 2.5)
